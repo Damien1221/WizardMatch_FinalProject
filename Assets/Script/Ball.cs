@@ -7,7 +7,7 @@ public class Ball : MonoBehaviour
     public GameObject Effect;
     public GameObject EnemyEffect;
     public AudioClip clip;
-    //public AnimationManager camera_Shake;
+    public AnimationManager camera_Shake;
 
     public int ballType; // Type of ball (color)
     public float checkRadius = 0.6f; // Detection range for nearby balls
@@ -19,7 +19,7 @@ public class Ball : MonoBehaviour
     public float addedMana = 0.5f;
     private void Start()
     {
-        //camera_Shake = FindObjectOfType<AnimationManager>();
+        camera_Shake = FindObjectOfType<AnimationManager>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -77,7 +77,7 @@ public class Ball : MonoBehaviour
                 Debug.Log(name + " (Trigger Ball) destroyed.");
                 Destroy(gameObject); // Destroy the trigger ball after activation
                 Instantiate(Effect, transform.position, Quaternion.identity);
-                //camera_Shake.CameraShake();
+                camera_Shake.CameraShake();
                 AudioSource.PlayClipAtPoint(clip, this.gameObject.transform.position);
             }
         }
