@@ -22,7 +22,6 @@ public class DrawingSystem : MonoBehaviour
 
     private Vector3 virtualKeyPosition = Vector2.zero; // Stores mouse position
     private bool recognized = false;
-    private string newGestureName = ""; // Name for custom gestures
 
     void Start()
     {
@@ -47,15 +46,6 @@ public class DrawingSystem : MonoBehaviour
         {
             trainingSet.Add(GestureIO.ReadGestureFromXML(gestureXml.text));
         }
-
-        // Load custom gestures saved by the player
-        string[] filePaths = Directory.GetFiles(Application.persistentDataPath, "*.xml");
-        foreach (string filePath in filePaths)
-        {
-            trainingSet.Add(GestureIO.ReadGestureFromFile(filePath));
-        }
-
-        Debug.Log($"Loaded {trainingSet.Count} gestures.");
     }
 
     void HandleInput()
@@ -116,6 +106,8 @@ public class DrawingSystem : MonoBehaviour
         {
             balloonSpawner.DestroyBalloonByShape(gestureResult.GestureClass); // Destroy balloon matching shape
         }
+
+        ResetGesture();
     }
 
     void ResetGesture()
@@ -132,26 +124,5 @@ public class DrawingSystem : MonoBehaviour
         gestureLinesRenderer.Clear();
     }
 
-    void SaveGesture(string gestureName)
-    {
-        string fileName = $"{Application.persistentDataPath}/{gestureName}-{DateTime.Now.ToFileTime()}.xml";
-
-        GestureIO.WriteGesture(points.ToArray(), gestureName, fileName);
-        trainingSet.Add(new Gesture(points.ToArray(), gestureName));
-
-        Debug.Log($"Gesture {gestureName} saved!");
-    }
-
-    void OnGUI()
-    {
-        // UI for saving gestures
-        GUI.Label(new Rect(Screen.width - 200, 150, 70, 30), "Add as:");
-        newGestureName = GUI.TextField(new Rect(Screen.width - 150, 150, 100, 30), newGestureName);
-
-        if (GUI.Button(new Rect(Screen.width - 50, 150, 50, 30), "Add") && points.Count > 0 && newGestureName != "")
-        {
-            SaveGesture(newGestureName);
-            newGestureName = ""; // Clear after saving
-        }
-    }
+   
 }
