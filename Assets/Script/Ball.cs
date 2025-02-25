@@ -15,8 +15,8 @@ public class Ball : MonoBehaviour
 
     public bool isEnemyBall = false; // True if this is an enemy ball
     public int enemyHealth = 3; // Health for enemy balls
-    
 
+    public float addedMana = 0.5f;
     private void Start()
     {
         //camera_Shake = FindObjectOfType<AnimationManager>();
@@ -70,7 +70,7 @@ public class Ball : MonoBehaviour
                         Debug.Log(ball.name + " is destroyed.");
                         Destroy(ball.gameObject);
                         //Put the mana here
-                        ManaBar.instance.AddMana(1); 
+                        ManaBar.instance.AddMana(addedMana); 
 
                     }
                 }

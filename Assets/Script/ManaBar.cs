@@ -34,23 +34,37 @@ public class ManaBar : MonoBehaviour
     {
         currentMana += amount;
         currentMana = Mathf.Clamp(currentMana, 0, maxMana); // Prevent overflow
-        StartCoroutine(SmoothFill()); // Start the smooth animation
+        StartCoroutine(SmoothFill(currentMana)); // Start the smooth animation
         Debug.Log("Mana Added: " + amount + " | Current Mana: " + currentMana);
     }
-    private IEnumerator SmoothFill()
+
+    public void UsedMana(float amount)
+    {
+        if (currentMana >= amount)
+        {
+            currentMana -= amount;
+            StartCoroutine(SmoothFill(currentMana)); // Smooth decrease
+            Debug.Log("Mana Used: " + amount + " | Remaining Mana: " + currentMana);
+        }
+        else
+        {
+            Debug.Log("Not enough mana!");
+        }
+
+    }
+    private IEnumerator SmoothFill(float targetValue)
     {
         float startValue = manaBar.value;
-        float targetValue = currentMana;
         float elapsedTime = 0f;
 
         while (elapsedTime < fillSpeed)
         {
             elapsedTime += Time.deltaTime;
             manaBar.value = Mathf.Lerp(startValue, targetValue, elapsedTime / fillSpeed);
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        manaBar.value = targetValue; // Ensure it reaches the exact value
+        manaBar.value = targetValue;
     }
 
 

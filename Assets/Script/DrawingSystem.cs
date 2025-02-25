@@ -10,6 +10,9 @@ public class DrawingSystem : MonoBehaviour
 {
     public Transform gestureOnScreenPrefab; // For drawing gestures
     public BalloonSpawner balloonSpawner; // Reference to the BalloonSpawner
+    internal ManaBar _manabar;
+
+    public float usedmana = 6f;
 
     private List<Gesture> trainingSet = new List<Gesture>(); // List of saved gestures
     private List<Point> points = new List<Point>(); // Collected points for drawing
@@ -23,12 +26,17 @@ public class DrawingSystem : MonoBehaviour
 
     void Start()
     {
+        _manabar = FindObjectOfType<ManaBar>();
+
         LoadGestures();
     }
 
     void Update()
     {
-        HandleInput();
+        if(_manabar.currentMana >= 6)
+        {
+            HandleInput();
+        }
     }
 
     void LoadGestures()
@@ -63,6 +71,7 @@ public class DrawingSystem : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             RecognizeGesture();
+            _manabar.UsedMana(usedmana);
         }
     }
 

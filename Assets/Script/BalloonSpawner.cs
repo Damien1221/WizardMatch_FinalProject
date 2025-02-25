@@ -12,13 +12,15 @@ public class BalloonSpawner : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("SpawnBalloon", 1f, 2f); // Spawns balloons every 2 seconds
+        //InvokeRepeating("SpawnBalloon", 1f, 2f); // Spawns balloons every 2 seconds
+        SpawnBalloon();
+        SpawnBalloon();
     }
 
     void SpawnBalloon()
     {
         Vector3 spawnPosition = new Vector3(
-            Random.Range(-5f, 5f),
+            Random.Range(-2f, 5f),
             spawnArea.position.y,
             0f
         );

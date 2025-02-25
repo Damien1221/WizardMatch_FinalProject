@@ -332,6 +332,7 @@ MonoBehaviour:
   isTriggerBall: 0
   isEnemyBall: 1
   enemyHealth: 2
+  addedMana: 0.5
 --- !u!1 &5855166063742382727
 GameObject:
   m_ObjectHideFlags: 0
