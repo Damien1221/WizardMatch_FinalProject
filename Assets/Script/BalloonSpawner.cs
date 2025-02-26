@@ -7,37 +7,54 @@ using UnityEngine.UI;
 public class BalloonSpawner : MonoBehaviour
 {
     public GameObject balloonPrefab;
-    public Transform spawnArea;
+    public Transform[] spawnPoints;
+    public Sprite[] shapeSprites; // Array of shape sprites
+
     private List<Balloon> activeBalloons = new List<Balloon>();
+    private string[] shapeNames = { "Circle", "Square", "Triangle", "ArrowUp", "Love" };
 
     void Start()
     {
-        //InvokeRepeating("SpawnBalloon", 1f, 2f); // Spawns balloons every 2 seconds
-        SpawnBalloon();
         SpawnBalloon();
     }
 
     void SpawnBalloon()
     {
-        Vector3 spawnPosition = new Vector3(
-            Random.Range(-2f, 5f),
-            spawnArea.position.y,
-            0f
-        );
+        ClearBalloons();
 
-        GameObject balloonObject = Instantiate(balloonPrefab, spawnPosition, Quaternion.identity);
-        Balloon balloon = balloonObject.GetComponent<Balloon>();
-        activeBalloons.Add(balloon);
+        for (int i = 0; i < spawnPoints.Length && i < 5; i++) // Spawn up to 5 balloons
+        {
+            GameObject balloonObject = Instantiate(balloonPrefab, spawnPoints[i].position, Quaternion.identity);
+            Balloon balloon = balloonObject.GetComponent<Balloon>();
+
+            string selectedShape = shapeNames[Random.Range(0, shapeNames.Length)]; // Pick a random shape
+            balloon.shapeSprites = shapeSprites; // Assign shape sprites from inspector
+            balloon.SetShape(selectedShape); // Set shape & sprite
+            activeBalloons.Add(balloon);
+        }
     }
 
     public void DestroyBalloonByShape(string shapeName)
     {
-        Balloon balloonToDestroy = activeBalloons.Find(balloon => balloon.shapeName == shapeName);
-
-        if (balloonToDestroy != null)
+        for (int i = activeBalloons.Count - 1; i >= 0; i--)
         {
-            activeBalloons.Remove(balloonToDestroy);
-            Destroy(balloonToDestroy.gameObject);
+            if (activeBalloons[i] != null && activeBalloons[i].shapeName == shapeName)
+            {
+                Destroy(activeBalloons[i].gameObject);
+                activeBalloons.RemoveAt(i);
+            }
         }
+    }
+
+    private void ClearBalloons()
+    {
+        foreach (Balloon balloon in activeBalloons)
+        {
+            if (balloon != null)
+            {
+                Destroy(balloon.gameObject);
+            }
+        }
+        activeBalloons.Clear();
     }
 }

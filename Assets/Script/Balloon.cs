@@ -6,23 +6,29 @@ using UnityEngine.UI;
 
 public class Balloon : MonoBehaviour
 {
-    public string shapeName;
+    public SpriteRenderer spriteRenderer; // Reference to the sprite renderer
+    public string shapeName; // Name of the shape
+    public Sprite[] shapeSprites; // Array to hold shape sprites (set in Inspector)
 
-    [SerializeField] private TextMeshProUGUI textMesh;
-
-    void Start()
+    public void SetShape(string shape)
     {
-        AssignRandomShape();
+        shapeName = shape;
+        Sprite newSprite = GetShapeSprite(shape);
+        if (newSprite != null)
+        {
+            spriteRenderer.sprite = newSprite; // Change the sprite to match the shape
+        }
     }
 
-    void AssignRandomShape()
+    private Sprite GetShapeSprite(string shape)
     {
-        string[] shapes = { "Circle", "Square", "Triangle", "ArrowUp" };
-        shapeName = shapes[Random.Range(0, shapes.Length)];
-
-        if (textMesh != null)
+        foreach (Sprite sprite in shapeSprites)
         {
-            textMesh.text = shapeName; // Display shape name on balloon
+            if (sprite.name.ToLower() == shape.ToLower()) // Match by name
+            {
+                return sprite;
+            }
         }
+        return null;
     }
 }

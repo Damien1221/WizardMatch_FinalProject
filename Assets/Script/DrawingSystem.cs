@@ -14,6 +14,7 @@ public class DrawingSystem : MonoBehaviour
     internal ManaBar _manabar;
 
     public float usedmana = 6f;
+    private float usedUltimate = 14f;
 
     private List<Gesture> trainingSet = new List<Gesture>(); // List of saved gestures
     private List<Point> points = new List<Point>(); // Collected points for drawing
@@ -116,6 +117,7 @@ public class DrawingSystem : MonoBehaviour
         if (gestureResult.Score > 0.4f && gestureResult.GestureClass == "Lighting" && _manabar.currentMana >= 20)
         {
             _Ultimate.PlayUltimate();
+            _manabar.UsedMana(usedUltimate);
         }
         else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
         {
