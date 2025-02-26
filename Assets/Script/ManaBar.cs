@@ -36,6 +36,11 @@ public class ManaBar : MonoBehaviour
         currentMana = Mathf.Clamp(currentMana, 0, maxMana); // Prevent overflow
         StartCoroutine(SmoothFill(currentMana)); // Start the smooth animation
         Debug.Log("Mana Added: " + amount + " | Current Mana: " + currentMana);
+
+        if(currentMana > 20)
+        {
+            currentMana = 20;
+        }
     }
 
     public void UsedMana(float amount)

@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float x, y;
 
+    public float CheataddedMana = 6;
+
     protected GameObject currentObj;
 
     // Start is called before the first frame update
@@ -29,6 +31,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //cheatCode
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            ManaBar.instance.AddMana(CheataddedMana);
+        }
 
         if (currentObj != null)
         {

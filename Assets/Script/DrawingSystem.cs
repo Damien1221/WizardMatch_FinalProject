@@ -10,6 +10,7 @@ public class DrawingSystem : MonoBehaviour
 {
     public Transform gestureOnScreenPrefab; // For drawing gestures
     public BalloonSpawner balloonSpawner; // Reference to the BalloonSpawner
+    public AnimationManager _Ultimate;
     internal ManaBar _manabar;
 
     public float usedmana = 6f;
@@ -26,6 +27,7 @@ public class DrawingSystem : MonoBehaviour
     void Start()
     {
         _manabar = FindObjectOfType<ManaBar>();
+        _Ultimate = FindObjectOfType<AnimationManager>();
 
         LoadGestures();
     }
@@ -46,6 +48,15 @@ public class DrawingSystem : MonoBehaviour
         {
             trainingSet.Add(GestureIO.ReadGestureFromXML(gestureXml.text));
         }
+
+        // Load custom gestures saved by the player
+        string[] filePaths = Directory.GetFiles(Application.persistentDataPath, "*.xml");
+        foreach (string filePath in filePaths)
+        {
+            trainingSet.Add(GestureIO.ReadGestureFromFile(filePath));
+        }
+
+        Debug.Log($"Loaded {trainingSet.Count} gestures.");
     }
 
     void HandleInput()
@@ -102,7 +113,11 @@ public class DrawingSystem : MonoBehaviour
 
         Debug.Log($"Recognized: {gestureResult.GestureClass} with score: {gestureResult.Score}");
 
-        if (gestureResult.Score > 0.4f) // Minimum confidence threshold
+        if (gestureResult.Score > 0.4f && gestureResult.GestureClass == "Lighting" && _manabar.currentMana >= 20)
+        {
+            _Ultimate.PlayUltimate();
+        }
+        else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
         {
             balloonSpawner.DestroyBalloonByShape(gestureResult.GestureClass); // Destroy balloon matching shape
         }
