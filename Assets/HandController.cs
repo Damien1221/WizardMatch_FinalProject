@@ -47,7 +47,7 @@ public class HandController : MonoBehaviour
             FlyingBall flyingBall = grabbedObject.GetComponent<FlyingBall>();
             if (flyingBall != null)
             {
-                flyingBall.GrabBall(hand_Position); // Stop movement
+                flyingBall.GrabBall(hand_Position, this); // Pass hand reference
             }
 
             grabbedObject.gravityScale = 0f;
@@ -60,7 +60,8 @@ public class HandController : MonoBehaviour
     {
         if (grabbedObject != null)
         {
-            // Check if the released object is a FlyingBall
+            grabbedObject.transform.parent = null; // Detach from hand
+
             FlyingBall flyingBall = grabbedObject.GetComponent<FlyingBall>();
             if (flyingBall != null)
             {
@@ -68,8 +69,15 @@ public class HandController : MonoBehaviour
             }
 
             grabbedObject.gravityScale = 1f;
-            grabbedObject.transform.parent = null;
             grabbedObject = null;
         }
+    }
+
+    public void GrabNewObject(Rigidbody2D newObject)
+    {
+        grabbedObject = newObject;
+        grabbedObject.gravityScale = 0f;
+        grabbedObject.velocity = Vector2.zero;
+        grabbedObject.transform.parent = transform; // Attach to hand
     }
 }

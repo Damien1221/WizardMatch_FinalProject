@@ -52,17 +52,30 @@ public class FlyingBall : MonoBehaviour
         timer = 0;
     }
 
-    public void GrabBall(Transform handPosition)
+    public void GrabBall(Transform handPosition, HandController handController)
     {
         isGrabbed = true;
+        GameObject newBall = null;
 
         if (gameObject.name == "Flying_Fire(Clone)")
         {
-            Instantiate(fire_Ball, handPosition.position, Quaternion.identity);
+            newBall = Instantiate(fire_Ball, handPosition.position, Quaternion.identity);
         }
-        else if(gameObject.name == "Flying_Leaf(Clone)")
+        else if (gameObject.name == "Flying_Leaf(Clone)")
         {
-            Instantiate(leaf_Ball, handPosition.position, Quaternion.identity);
+            newBall = Instantiate(leaf_Ball, handPosition.position, Quaternion.identity);
+        }
+
+        if (newBall != null)
+        {
+            newBall.transform.parent = handPosition; // Attach to hand so it moves with it
+
+            // Make sure the new ball is grabbed by the hand
+            Rigidbody2D newBallRb = newBall.GetComponent<Rigidbody2D>();
+            if (newBallRb != null)
+            {
+                handController.GrabNewObject(newBallRb);
+            }
         }
 
         Destroy(gameObject); // Destroy the current ball
