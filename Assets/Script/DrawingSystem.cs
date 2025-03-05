@@ -14,7 +14,7 @@ public class DrawingSystem : MonoBehaviour
     internal ManaBar _manabar;
 
     public float usedmana = 6f;
-    private float usedUltimate = 14f;
+    private float usedUltimate = 20f;
 
     private List<Gesture> trainingSet = new List<Gesture>(); // List of saved gestures
     private List<Point> points = new List<Point>(); // Collected points for drawing
@@ -35,7 +35,7 @@ public class DrawingSystem : MonoBehaviour
 
     void Update()
     {
-        if(_manabar.currentMana >= 6)
+        if(_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6)
         {
             HandleInput();
         }
@@ -73,7 +73,6 @@ public class DrawingSystem : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             RecognizeGesture();
-            _manabar.UsedMana(usedmana);
         }
     }
 
@@ -119,10 +118,15 @@ public class DrawingSystem : MonoBehaviour
             _Ultimate.PlayUltimate();
             _manabar.UsedMana(usedUltimate);
         }
-        else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
+        else if(gestureResult.Score > 0.4f && gestureResult.GestureClass == "Triangle" && _manabar.currentGreenMana >= 6)
         {
-            balloonSpawner.DestroyBalloonByShape(gestureResult.GestureClass); // Destroy balloon matching shape
+            _manabar.UsedGreenMana(usedmana);
         }
+        //else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
+        //{
+        //    balloonSpawner.DestroyBalloonByShape(gestureResult.GestureClass); // Destroy balloon matching shape
+        //    _manabar.UsedGreenMana(usedmana);
+        //}
 
         ResetGesture();
     }

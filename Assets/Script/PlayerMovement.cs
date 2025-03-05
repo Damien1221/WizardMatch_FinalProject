@@ -37,6 +37,10 @@ public class PlayerMovement : MonoBehaviour
         {
             ManaBar.instance.AddMana(CheataddedMana);
         }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            ManaBar.instance.AddGreenMana(CheataddedMana);
+        }
 
         if (currentObj != null)
         {

@@ -68,10 +68,16 @@ public class Ball : MonoBehaviour
                     else
                     {
                         Debug.Log(ball.name + " is destroyed.");
+                        if (ball.name == "Fire(Clone)")
+                        {
+                            ManaBar.instance.AddMana(addedMana);
+                        }
+                        else if (ball.name == "Leaf(Clone)")
+                        {
+                            ManaBar.instance.AddGreenMana(addedMana);
+                        }
                         Destroy(ball.gameObject);
                         //Put the mana here
-                        ManaBar.instance.AddMana(addedMana); 
-
                     }
                 }
                 Debug.Log(name + " (Trigger Ball) destroyed.");
