@@ -6,6 +6,9 @@ public class FlyingBall : MonoBehaviour
 {
     public GameObject fire_Ball;
     public GameObject leaf_Ball;
+    public GameObject power_Fire;
+    public GameObject power_Leaf;
+
 
     public float speed = 3f;
     public float changeDirectionTime = 2f;
@@ -64,6 +67,14 @@ public class FlyingBall : MonoBehaviour
         else if (gameObject.name == "Flying_Leaf(Clone)")
         {
             newBall = Instantiate(leaf_Ball, handPosition.position, Quaternion.identity);
+        }
+        else if(gameObject.name == "Fly_PowerFire(Clone)")
+        {
+            newBall = Instantiate(power_Fire, handPosition.position, Quaternion.identity);
+        }
+        else if (gameObject.name == "Fly_PowerLeaf(Clone)")
+        {
+            newBall = Instantiate(power_Leaf, handPosition.position, Quaternion.identity);
         }
 
         if (newBall != null)

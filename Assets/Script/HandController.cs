@@ -5,6 +5,7 @@ using UnityEngine;
 public class HandController : MonoBehaviour
 {
     public Transform hand_Position;
+    public Transform target;
 
     public float topScreenLimit = 3.5f; // Adjust this based on your screen setup
     public float bottomScreenLimit = 2.0f; // Lower boundary for hand movement
@@ -12,11 +13,22 @@ public class HandController : MonoBehaviour
     public float rightLimit = 7f; // Right boundary
     public float moveSpeed = 10f;
 
+    private AnimationManager grab_Hand;
     private Rigidbody2D grabbedObject = null;
     private Vector3 mousePosition;
 
+    void Start()
+    {
+        grab_Hand = FindObjectOfType<AnimationManager>();
+    }
+
     void Update()
     {
+        if (target != null)
+        {
+            target.position = transform.position;
+        }
+
         // Move the hand with the mouse, but limit Y position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0f;
@@ -29,10 +41,12 @@ public class HandController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             TryGrabObject();
+            grab_Hand.ClosingHand();
         }
         else if (Input.GetMouseButtonUp(0))
         {
             ReleaseObject();
+            grab_Hand.OpeningHand();
         }
     }
 

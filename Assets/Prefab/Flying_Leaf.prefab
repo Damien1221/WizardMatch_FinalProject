@@ -221,8 +221,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fire_Ball: {fileID: 5093285177566311090, guid: d104ea57557049940a86c5bf4eae0a17, type: 3}
   leaf_Ball: {fileID: 5784205448868124561, guid: 132d3c5add6d7ec44baf7592480c33c1, type: 3}
+  power_Fire: {fileID: 714723445531328291, guid: a4380c44b086f6b4497cff410bc00832, type: 3}
+  power_Leaf: {fileID: 1318094703181371554, guid: 13bcb2033f9d2ac4fb4e7d253247fcd8, type: 3}
   speed: 3
-  changeDirectionTime: 2
+  changeDirectionTime: 0.5
   leftLimit: -2
   rightLimit: 6
   bottomLimit: 1

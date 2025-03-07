@@ -35,7 +35,7 @@ public class DrawingSystem : MonoBehaviour
 
     void Update()
     {
-        if(_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6)
+        if (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6)
         {
             HandleInput();
         }
