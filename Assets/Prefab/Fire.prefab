@@ -327,6 +327,7 @@ MonoBehaviour:
   Effect: {fileID: 6207012029866049141, guid: 874e43511c42d9c479b04a3caa6943e1, type: 3}
   EnemyEffect: {fileID: 0}
   clip: {fileID: 8300000, guid: f8aea6f9859f68c4f9d6987e41b7510a, type: 3}
+  camera_Shake: {fileID: 0}
   ballType: 1
   checkRadius: 0.6
   isTriggerBall: 0

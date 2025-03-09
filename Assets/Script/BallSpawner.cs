@@ -6,32 +6,38 @@ public class BallSpawner : MonoBehaviour
 {
     [SerializeField] GameObject[] ObjPrefab;
 
-    public float SpawnInterval = 1f;
-    private float _spawnTimer = 0f;
+    public float spawnInterval = 2f;
+    public int maxBalls = 5;
+
+    private int ballCount = 0;
 
     protected GameObject currentObj;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(SpawnBalls());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_spawnTimer > 0)
-        {
-            _spawnTimer -= Time.deltaTime;
-        }
-        else
-        {
-            Spawning();
-            _spawnTimer = SpawnInterval;
-        }
 
     }
-    public void Spawning()
+    IEnumerator SpawnBalls()
+    {
+        Vector3 randomSpawnPosition = new Vector3(Random.Range(-0.6f, 7.7f), Random.Range(3f, 2.6f), 0);
+        while (ballCount < maxBalls)
+        {
+            currentObj = Instantiate(ObjPrefab[Random.Range(0, ObjPrefab.Length)], randomSpawnPosition, Quaternion.identity);
+            currentObj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+            ballCount++;
+
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+    public void SpawningOneBall()
     {
         Vector3 randomSpawnPosition = new Vector3(Random.Range(-0.6f, 7.7f), Random.Range(3f, 2.6f), 0);
 

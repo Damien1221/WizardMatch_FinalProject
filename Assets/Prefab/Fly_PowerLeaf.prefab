@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 3386202122352959442}
   - component: {fileID: 3386202122352959441}
   - component: {fileID: 3386202122352959440}
-  - component: {fileID: 3386202122352959455}
+  - component: {fileID: -3449770181735495491}
   - component: {fileID: 3242976021990723226}
+  - component: {fileID: -4724804521930454499}
   m_Layer: 0
   m_Name: Fly_PowerLeaf
   m_TagString: Untagged
@@ -106,7 +107,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.55
---- !u!50 &3386202122352959455
+--- !u!50 &-3449770181735495491
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -149,6 +150,20 @@ MonoBehaviour:
   rightLimit: 6
   bottomLimit: 1
   topLimit: 3
+--- !u!114 &-4724804521930454499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3386202122352959454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f70f14ca57f1a214185d8c7f650abf00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HighLight: {fileID: 4867762240006746312, guid: 0a038543ce9941a44b98b09aab49ba09, type: 3}
+  HighLight_Small: {fileID: 4397330873636045316, guid: 49e1872d800b87d4f952a0e1a1bdaf9e, type: 3}
 --- !u!1 &3386202122561325735
 GameObject:
   m_ObjectHideFlags: 0

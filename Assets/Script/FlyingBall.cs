@@ -6,9 +6,11 @@ public class FlyingBall : MonoBehaviour
 {
     public GameObject fire_Ball;
     public GameObject leaf_Ball;
+    public GameObject lighting_Ball;
+
     public GameObject power_Fire;
     public GameObject power_Leaf;
-
+    public GameObject power_Lighting;
 
     public float speed = 3f;
     public float changeDirectionTime = 2f;
@@ -17,12 +19,15 @@ public class FlyingBall : MonoBehaviour
     public float bottomLimit = 2f; // Lower boundary
     public float topLimit = 6f; // Upper boundary
 
+    private BallSpawner ball_Spawner;
     private Vector2 direction;
     private float timer;
     private bool isGrabbed = false;
 
     void Start()
     {
+        ball_Spawner = FindObjectOfType<BallSpawner>();
+
         ChangeDirection();
     }
 
@@ -58,6 +63,8 @@ public class FlyingBall : MonoBehaviour
     public void GrabBall(Transform handPosition, HandController handController)
     {
         isGrabbed = true;
+        ball_Spawner.SpawningOneBall();
+
         GameObject newBall = null;
 
         if (gameObject.name == "Flying_Fire(Clone)")
@@ -68,6 +75,11 @@ public class FlyingBall : MonoBehaviour
         {
             newBall = Instantiate(leaf_Ball, handPosition.position, Quaternion.identity);
         }
+        else if (gameObject.name == "Flying_Lighting(Clone)")
+        {
+            newBall = Instantiate(lighting_Ball, handPosition.position, Quaternion.identity);
+        }
+
         else if(gameObject.name == "Fly_PowerFire(Clone)")
         {
             newBall = Instantiate(power_Fire, handPosition.position, Quaternion.identity);
@@ -75,6 +87,10 @@ public class FlyingBall : MonoBehaviour
         else if (gameObject.name == "Fly_PowerLeaf(Clone)")
         {
             newBall = Instantiate(power_Leaf, handPosition.position, Quaternion.identity);
+        }
+        else if (gameObject.name == "Fly_PowerLighting(Clone)")
+        {
+            newBall = Instantiate(power_Lighting, handPosition.position, Quaternion.identity);
         }
 
         if (newBall != null)

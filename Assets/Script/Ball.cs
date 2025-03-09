@@ -9,6 +9,9 @@ public class Ball : MonoBehaviour
     public AudioClip clip;
     public AnimationManager camera_Shake;
 
+    public GameObject currentSpriteObject;
+    public Sprite enemy_DamagedSprite;
+
     public int ballType; // Type of ball (color)
     public float checkRadius = 0.6f; // Detection range for nearby balls
     public bool isTriggerBall = false; // True if this is a trigger ball
@@ -17,8 +20,25 @@ public class Ball : MonoBehaviour
     public int enemyHealth = 3; // Health for enemy balls
 
     public float addedMana = 0.5f;
-    private void Start()
+
+    private SpriteRenderer spriteRenderer;
+
+    void Start()
     {
+        if (currentSpriteObject == null)
+        {
+            currentSpriteObject = transform.Find("Icon").gameObject; // Replace "ChildSprite" with the actual name
+        }
+
+        if (currentSpriteObject != null)
+        {
+            spriteRenderer = currentSpriteObject.GetComponent<SpriteRenderer>(); // Get the SpriteRenderer
+        }
+        else
+        {
+            Debug.LogError("No sprite object found! Assign it in the Inspector or check the name.");
+        }
+
         camera_Shake = FindObjectOfType<AnimationManager>();
     }
 
@@ -76,11 +96,16 @@ public class Ball : MonoBehaviour
                         {
                             ManaBar.instance.AddGreenMana(addedMana);
                         }
+                        else if(ball.name == "Lighting(Clone)")
+                        {
+                            ManaBar.instance.AddBlueMana(addedMana);
+                        }
+
                         Destroy(ball.gameObject);
-                        //Put the mana here
                     }
                 }
                 Debug.Log(name + " (Trigger Ball) destroyed.");
+                ComboSystem.instance.IncreaseCombo();
                 Destroy(gameObject); // Destroy the trigger ball after activation
                 Instantiate(Effect, transform.position, Quaternion.identity);
                 camera_Shake.CameraShake();
@@ -112,11 +137,35 @@ public class Ball : MonoBehaviour
         Debug.Log(name + " (Enemy) took damage! Current Health: " + enemyHealth);
         enemyHealth -= damage;
 
-        if (enemyHealth <= 0)
+        if(enemyHealth == 1)
+        {
+            ChangeSprite();
+        }
+        else if (enemyHealth <= 0)
         {
             Debug.Log(name + " (Enemy) destroyed!");
             Instantiate(EnemyEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
+        }
+    }
+    void ChangeSprite()
+    {
+        if (spriteRenderer != null && enemy_DamagedSprite != null)
+        {
+            spriteRenderer.enabled = false; // Hide the current sprite
+            GameObject newSprite = new GameObject("DamagedSprite"); // Create a new GameObject
+            SpriteRenderer newRenderer = newSprite.AddComponent<SpriteRenderer>(); // Add SpriteRenderer
+
+            newRenderer.sprite = enemy_DamagedSprite; // Set new sprite
+            newRenderer.sortingOrder = 5;
+            newSprite.transform.position = currentSpriteObject.transform.position; // Match position
+            newSprite.transform.parent = transform; // Parent it to the enemy
+
+            Debug.Log("Enemy sprite changed!");
+        }
+        else
+        {
+            Debug.LogError("SpriteRenderer or damagedSprite is missing!");
         }
     }
 }

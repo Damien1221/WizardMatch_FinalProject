@@ -74,15 +74,17 @@ public class HandController : MonoBehaviour
     {
         if (grabbedObject != null)
         {
-            grabbedObject.transform.parent = null; // Detach from hand
+            // Remove freeze constraint so the ball can move freely
+            grabbedObject.constraints = RigidbodyConstraints2D.None;
 
-            FlyingBall flyingBall = grabbedObject.GetComponent<FlyingBall>();
-            if (flyingBall != null)
-            {
-                flyingBall.ReleaseBall(); // Resume movement
-            }
+            // Apply throw force in the direction of the hand's movement
+            Vector2 throwDirection = (Vector2)(transform.position - grabbedObject.transform.position).normalized;
+            float throwForce = 5f; // Adjust this value to control throw strength
+            grabbedObject.velocity = throwDirection * throwForce;
 
+            // Detach from hand
             grabbedObject.gravityScale = 1f;
+            grabbedObject.transform.parent = null;
             grabbedObject = null;
         }
     }
