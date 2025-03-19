@@ -6,6 +6,7 @@ public class HandController : MonoBehaviour
 {
     public Transform hand_Position;
     public Transform target;
+    public GameObject sparks_effect;
 
     public float topScreenLimit = 3.5f; // Adjust this based on your screen setup
     public float bottomScreenLimit = 2.0f; // Lower boundary for hand movement
@@ -13,9 +14,14 @@ public class HandController : MonoBehaviour
     public float rightLimit = 7f; // Right boundary
     public float moveSpeed = 10f;
 
+    public float throwForceMultiplier = 2f; // Adjust for stronger/weaker throws
+
     private AnimationManager grab_Hand;
     private Rigidbody2D grabbedObject = null;
     private Vector3 mousePosition;
+
+    private Vector3 lastPosition;
+    private Vector3 velocity;
 
     void Start()
     {
@@ -28,6 +34,10 @@ public class HandController : MonoBehaviour
         {
             target.position = transform.position;
         }
+
+        // Calculate the hand velocity
+        velocity = (transform.position - lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
 
         // Move the hand with the mouse, but limit Y position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -77,10 +87,8 @@ public class HandController : MonoBehaviour
             // Remove freeze constraint so the ball can move freely
             grabbedObject.constraints = RigidbodyConstraints2D.None;
 
-            // Apply throw force in the direction of the hand's movement
-            Vector2 throwDirection = (Vector2)(transform.position - grabbedObject.transform.position).normalized;
-            float throwForce = 5f; // Adjust this value to control throw strength
-            grabbedObject.velocity = throwDirection * throwForce;
+            // Apply throwing force
+            grabbedObject.velocity = velocity * throwForceMultiplier;
 
             // Detach from hand
             grabbedObject.gravityScale = 1f;

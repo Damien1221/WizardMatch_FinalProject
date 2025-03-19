@@ -24,11 +24,21 @@ public class FlyingBall : MonoBehaviour
     private float timer;
     private bool isGrabbed = false;
 
+    private float originalSpeed;
+    private bool isSlowedDown = false;
+
     void Start()
     {
         ball_Spawner = FindObjectOfType<BallSpawner>();
+        originalSpeed = speed;
 
         ChangeDirection();
+
+        DrawingSystem drawingSystem = FindObjectOfType<DrawingSystem>();
+        if (drawingSystem != null)
+        {
+            drawingSystem.flying_Ball = this;
+        }
     }
 
     void Update()
@@ -111,5 +121,47 @@ public class FlyingBall : MonoBehaviour
     public void ReleaseBall()
     {
         isGrabbed = false;
+    }
+
+    public void SetChangeDirectionTime(float newTime)
+    {
+        changeDirectionTime = newTime;
+        Debug.Log("changeDirectionTime set to: " + changeDirectionTime);
+    }
+
+    public void SlowDownForDrawing()
+    {
+        if (!isSlowedDown)
+        {
+            Debug.Log("Calling SlowDownBall()");
+            StartCoroutine(SlowDownBall());
+            StartCoroutine(ResetChangeDirectionTime());
+        }
+        else
+        {
+            Debug.Log("Already slowed down, ignoring...");
+        }
+    }
+
+    private System.Collections.IEnumerator SlowDownBall()
+    {
+        Debug.Log("SlowDownBall() started!"); // Check if function is triggered
+
+        isSlowedDown = true;
+        speed = 0.5f; // Reduce speed by half
+        Debug.Log("Speed reduced to: " + speed);
+
+        yield return new WaitForSeconds(5f); // Wait for 5 seconds
+
+        speed = originalSpeed; // Restore original speed
+        Debug.Log("Speed restored to: " + speed);
+
+        isSlowedDown = false;
+    }
+    IEnumerator ResetChangeDirectionTime()
+    {
+        yield return new WaitForSeconds(5f);
+        changeDirectionTime = 2f; // Reset to default
+        Debug.Log("changeDirectionTime reset to default: " + changeDirectionTime);
     }
 }

@@ -10,7 +10,10 @@ public class DrawingSystem : MonoBehaviour
 {
     public Transform gestureOnScreenPrefab; // For drawing gestures
     public BalloonSpawner balloonSpawner; // Reference to the BalloonSpawner
-    public AnimationManager _Ultimate;
+    public Collider2D drawingAreaCollider;
+    public FlyingBall flying_Ball;
+
+    internal AnimationManager _Ultimate;
     internal ManaBar _manabar;
 
     public float usedmana = 6f;
@@ -22,13 +25,16 @@ public class DrawingSystem : MonoBehaviour
     private List<LineRenderer> gestureLinesRenderer = new List<LineRenderer>(); // Line renderers for drawing
     private LineRenderer currentGestureLineRenderer;
 
+    private List<EnemyBall> clickedEnemies = new List<EnemyBall>();
     private Vector3 virtualKeyPosition = Vector2.zero; // Stores mouse position
     private bool recognized = false;
+    private bool canClickToDestroy = false;
 
     void Start()
     {
         _manabar = FindObjectOfType<ManaBar>();
         _Ultimate = FindObjectOfType<AnimationManager>();
+        flying_Ball = FindObjectOfType<FlyingBall>();
 
         LoadGestures();
     }
@@ -38,6 +44,11 @@ public class DrawingSystem : MonoBehaviour
         if (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6)
         {
             HandleInput();
+        }
+
+        if (canClickToDestroy && Input.GetMouseButtonDown(0))
+        {
+            DetectEnemyClick();
         }
     }
 
@@ -98,6 +109,11 @@ public class DrawingSystem : MonoBehaviour
         virtualKeyPosition = Input.mousePosition; // Get cursor position
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(virtualKeyPosition.x, virtualKeyPosition.y, 10));
 
+        if (drawingAreaCollider != null && !drawingAreaCollider.OverlapPoint(worldPosition))
+        {
+            return; // Ignore points outside the area
+        }
+
         points.Add(new Point(virtualKeyPosition.x, -virtualKeyPosition.y, strokeId)); // Add to recognizer
 
         // Draw gesture
@@ -113,14 +129,38 @@ public class DrawingSystem : MonoBehaviour
 
         Debug.Log($"Recognized: {gestureResult.GestureClass} with score: {gestureResult.Score}");
 
-        if (gestureResult.Score > 0.4f && gestureResult.GestureClass == "Lighting" && _manabar.currentMana >= 20)
+        if (gestureResult.Score > 0.4f && gestureResult.GestureClass == "Lighting" && _manabar.currentMana >= 6)
         {
-            _Ultimate.PlayUltimate();
-            _manabar.UsedMana(usedUltimate);
+            _manabar.UsedMana(usedmana);
+            //attack enemy
+
+
+            //_Ultimate.PlayUltimate();
+            //_manabar.UsedMana(usedUltimate);
         }
-        else if(gestureResult.Score > 0.4f && gestureResult.GestureClass == "Triangle" && _manabar.currentGreenMana >= 6)
+        else if(gestureResult.Score > 0.4f && gestureResult.GestureClass == "Circle" && _manabar.currentGreenMana >= 6)
         {
             _manabar.UsedGreenMana(usedmana);
+            //slow flying ball
+            FlyingBall[] allFlyingBalls = FindObjectsOfType<FlyingBall>();
+            foreach (FlyingBall ball in allFlyingBalls)
+            {
+                ball.SlowDownForDrawing();
+                ball.SetChangeDirectionTime(5f);
+            }
+        }
+        else if (gestureResult.Score > 0.4f && gestureResult.GestureClass == "five point star" && _manabar.currentBlueMana >= 6)
+        {
+            _manabar.UsedBlueMana(usedmana);
+            //destroy enemy ball
+            EnemyBall[] allEnemyBalls = FindObjectsOfType<EnemyBall>();
+            foreach (EnemyBall enemy in allEnemyBalls)
+            {
+                enemy.SpawnEffect();
+            }
+
+            canClickToDestroy = true;
+            StartCoroutine(DestroyClickedEnemiesAfterTime(5f)); // Start countdown
         }
         //else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
         //{
@@ -129,6 +169,37 @@ public class DrawingSystem : MonoBehaviour
         //}
 
         ResetGesture();
+    }
+    void DetectEnemyClick()
+    {
+        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Collider2D hit = Physics2D.OverlapPoint(worldPoint);
+
+        if (hit != null)
+        {
+            EnemyBall enemy = hit.GetComponent<EnemyBall>();
+            if (enemy != null)
+            {
+                enemy.OnClick(); // Spawn the click effect
+                clickedEnemies.Add(enemy); // Track clicked enemies
+            }
+        }
+    }
+
+    private IEnumerator DestroyClickedEnemiesAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        foreach (EnemyBall enemy in clickedEnemies)
+        {
+            if (enemy != null)
+            {
+                enemy.DestroyEnemy(); // Destroy enemy and remove spawn effect
+            }
+        }
+
+        clickedEnemies.Clear(); // Reset the list
+        canClickToDestroy = false; // Disable clicking
     }
 
     void ResetGesture()
