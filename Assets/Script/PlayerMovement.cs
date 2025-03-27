@@ -4,96 +4,46 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] GameObject[] ObjPrefab;
+    public float movementSpeed = 3f;
 
-    public float Movespeed = 5.0f;
-    public bool firstBall;
-    public Transform newposition;
+    private Animator _anim;
+    private float horizontal = 0.0f;
+    private float speed = 0.0f;
+
+    private Vector2 movement;
     private Rigidbody2D rb;
-    [SerializeField] private CoolDown _cooldown;
 
-    public float x, y;
-
-    public float CheataddedMana = 6;
-
-    protected GameObject currentObj;
-
-    // Start is called before the first frame update
     void Start()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
         rb = GetComponent<Rigidbody2D>();
-
-        Spawning();
-        firstBall = true;
+        _anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
 
-        //cheatCode
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            ManaBar.instance.AddMana(CheataddedMana);
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            ManaBar.instance.AddGreenMana(CheataddedMana);
-        }
+        horizontal = movement.x > 0.01f ? movement.x : movement.x < -0.01f ? 1 : 0;
+        speed = movement.y > 0.01f ? movement.y : movement.y < -0.01 ? 1 : 0;
 
-        if (currentObj != null)
+        if(movement.x < -0.01f)
         {
-            currentObj.transform.position = newposition.transform.position;
-        }
-
-        if (Input.GetKey(KeyCode.A) && transform.position.x > x)
-        {
-            rb.velocity = new Vector2(-Movespeed, rb.velocity.y);
-        }
-        else if (Input.GetKey(KeyCode.D) && transform.position.x < y)
-        {
-            rb.velocity = new Vector2(Movespeed, rb.velocity.y);
+            gameObject.transform.localScale = new Vector3(-2, 2, 2);
         }
         else
         {
-            rb.velocity = Vector2.zero;
+            gameObject.transform.localScale = new Vector3(2, 2, 2);
         }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (_cooldown.CurrentProgress == CoolDown.Progress.Ready && firstBall == true)
-            {
-                Drop();
-                _cooldown.StartCooldown();
-                firstBall = false;
-                Spawning();
-            }
 
-            else if (_cooldown.CurrentProgress == CoolDown.Progress.Ready && firstBall == false)
-            {
-                Drop();
-                _cooldown.StartCooldown();
-                Spawning();
-            }
-
-            if (_cooldown.CurrentProgress == CoolDown.Progress.Finished)
-            {
-                _cooldown.StopCooldown();
-            }
-        }
+        _anim.SetFloat("Horizontal", horizontal);
+        _anim.SetFloat("Vertical", movement.y);
+        _anim.SetFloat("Speed", speed);
     }
 
-    public void Spawning()
+    void FixedUpdate()
     {
-        currentObj = Instantiate(ObjPrefab[Random.Range(0, ObjPrefab.Length)], newposition.transform.position, Quaternion.identity);
-        currentObj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
-
+        rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
     }
 
-    public void Drop()
-    {
-        currentObj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
-
-        currentObj = null;
-    }
 }

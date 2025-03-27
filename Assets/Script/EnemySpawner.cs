@@ -8,11 +8,13 @@ public class EnemySpawner : MonoBehaviour
 
     public float SpawnInterval = 1f;
     private float _spawnTimer = 0f;
-
+    private AnimationManager enemy_Attack;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemy_Attack = FindObjectOfType<AnimationManager>();
+
         _spawnTimer = SpawnInterval;
     }
 
@@ -25,6 +27,7 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             SpawnAttack();
+            enemy_Attack.MonsterAttack();
             _spawnTimer = SpawnInterval;
         }
     }

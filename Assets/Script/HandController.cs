@@ -13,8 +13,11 @@ public class HandController : MonoBehaviour
     public float leftLimit = -7f; // Left boundary
     public float rightLimit = 7f; // Right boundary
     public float moveSpeed = 10f;
+    public float StunTime = 2f;
 
     public float throwForceMultiplier = 2f; // Adjust for stronger/weaker throws
+
+    public bool isHandUncontrollable = false; // Track uncontrollable state
 
     private AnimationManager grab_Hand;
     private Rigidbody2D grabbedObject = null;
@@ -35,17 +38,10 @@ public class HandController : MonoBehaviour
             target.position = transform.position;
         }
 
-        // Calculate the hand velocity
-        velocity = (transform.position - lastPosition) / Time.deltaTime;
-        lastPosition = transform.position;
-
-        // Move the hand with the mouse, but limit Y position
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0f;
-        mousePosition.y = Mathf.Clamp(mousePosition.y, bottomScreenLimit, topScreenLimit); // Restrict vertical movement
-        mousePosition.x = Mathf.Clamp(mousePosition.x, leftLimit, rightLimit); // Restrict left/right movement
-        transform.position = Vector2.Lerp(transform.position, mousePosition, moveSpeed * Time.deltaTime);
-
+        if (!isHandUncontrollable)
+        {
+            FollowMouse();
+        }
 
         // Handle grabbing and releasing objects
         if (Input.GetMouseButtonDown(0))
@@ -58,6 +54,20 @@ public class HandController : MonoBehaviour
             ReleaseObject();
             grab_Hand.OpeningHand();
         }
+    }
+
+    public void FollowMouse()
+    {
+        // Calculate the hand velocity
+        velocity = (transform.position - lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
+
+        // Move the hand with the mouse, but limit Y position
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f;
+        mousePosition.y = Mathf.Clamp(mousePosition.y, bottomScreenLimit, topScreenLimit); // Restrict vertical movement
+        mousePosition.x = Mathf.Clamp(mousePosition.x, leftLimit, rightLimit); // Restrict left/right movement
+        transform.position = Vector2.Lerp(transform.position, mousePosition, moveSpeed * Time.deltaTime);
     }
 
     void TryGrabObject()
@@ -104,4 +114,29 @@ public class HandController : MonoBehaviour
         grabbedObject.velocity = Vector2.zero;
         grabbedObject.transform.parent = transform; // Attach to hand
     }
+
+    public IEnumerator UncontrollableHand()
+    {
+        Debug.Log("Hand is uncontrollable!");
+        grab_Hand.CameraShakingHard();
+
+        isHandUncontrollable = true; // Disable normal mouse control
+        float duration = StunTime; // Effect lasts
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            float randomX = Random.Range(-1f, 1f);
+            float randomY = Random.Range(-1f, 1f);
+            transform.position += new Vector3(randomX, randomY, 0) * Time.deltaTime * 5f; // Random movement
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        isHandUncontrollable = false; // Restore mouse control
+        Debug.Log("Hand control restored!");
+        grab_Hand.CameraStopShaking();
+    }
+
 }

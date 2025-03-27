@@ -7,16 +7,25 @@ public class SelectedObject : MonoBehaviour
     public GameObject HighLight;
     public GameObject HighLight_Small;
 
+    private AnimationManager _HandAnim;
     private GameObject newSelection;
     private bool is_Selection;
 
     private static bool isMouseHeld = false; // Shared across all objects to track mouse state
+
+    void Start()
+    {
+        _HandAnim = FindObjectOfType<AnimationManager>();
+        
+    }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             isMouseHeld = true; // Mark that the mouse is pressed
+            _HandAnim.ClosingWideHand();
+            _HandAnim.ClosingHand();
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -28,7 +37,7 @@ public class SelectedObject : MonoBehaviour
     {
         if (isMouseHeld) return; // Don't highlight if mouse is being held
 
-        if (gameObject.name == "Flying_Fire(Clone)" || gameObject.name == "Flying_Leaf(Clone)" || gameObject.name == "Flying_Lighting(Clone)")
+        if (gameObject.name == "Flying_Fire(Clone)" || gameObject.name == "Flying_Leaf(Clone)" || gameObject.name == "Flying_Lighting(Clone)" || gameObject.name == "Flying_Badguy(Clone)")
         {
             if (newSelection == null)
             {
@@ -50,6 +59,7 @@ public class SelectedObject : MonoBehaviour
 
         is_Selection = true;
         newSelection.SetActive(true);
+        _HandAnim.OpeningWideHand();
     }
 
     private void OnMouseExit()
@@ -60,6 +70,7 @@ public class SelectedObject : MonoBehaviour
         if (newSelection != null)
         {
             newSelection.SetActive(false);
+            _HandAnim.ClosingWideHand();
         }
     }
 }

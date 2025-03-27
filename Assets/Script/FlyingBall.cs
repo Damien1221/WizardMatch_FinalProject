@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FlyingBall : MonoBehaviour
 {
+    //grabObject
     public GameObject fire_Ball;
     public GameObject leaf_Ball;
     public GameObject lighting_Ball;
@@ -12,12 +13,34 @@ public class FlyingBall : MonoBehaviour
     public GameObject power_Leaf;
     public GameObject power_Lighting;
 
+    // Glowing forms of flying objects
+    public GameObject glowing_Fire;
+    public GameObject glowing_Leaf;
+    public GameObject glowing_Lighting;
+
+    public GameObject glowing_PowerFire;
+    public GameObject glowing_PowerLeaf;
+    public GameObject glowing_PowerLighting;
+
+    //Flying object
+    public GameObject flying_fire_Ball;
+    public GameObject flying_leaf_Ball;
+    public GameObject flying_lighting_Ball;
+
+    public GameObject flying_power_Fire;
+    public GameObject flying_power_Leaf;
+    public GameObject flying_power_Lighting;
+
+
     public float speed = 3f;
     public float changeDirectionTime = 2f;
     public float leftLimit = -5f; // Left boundary
     public float rightLimit = 5f; // Right boundary
     public float bottomLimit = 2f; // Lower boundary
     public float topLimit = 6f; // Upper boundary
+
+    private static bool isTransformed = false; // Tracks whether objects are glowing
+    private static List<FlyingBall> allFlyingBalls = new List<FlyingBall>(); // Store all flying balls
 
     private BallSpawner ball_Spawner;
     private Vector2 direction;
@@ -34,6 +57,11 @@ public class FlyingBall : MonoBehaviour
 
         ChangeDirection();
 
+        if (!allFlyingBalls.Contains(this))
+        {
+            allFlyingBalls.Add(this); // Add to list for toggling
+        }
+
         DrawingSystem drawingSystem = FindObjectOfType<DrawingSystem>();
         if (drawingSystem != null)
         {
@@ -43,6 +71,11 @@ public class FlyingBall : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ToggleAllFlyingObjects();
+        }
+
         if (!isGrabbed)
         {
             // Move the ball
@@ -59,9 +92,105 @@ public class FlyingBall : MonoBehaviour
             transform.position = new Vector3(
                 Mathf.Clamp(transform.position.x, leftLimit, rightLimit),
                 Mathf.Clamp(transform.position.y, bottomLimit, topLimit),
-                transform.position.z
-            );
+                transform.position.z);
         }
+    }
+
+    public static void ToggleAllFlyingObjects()
+    {
+        isTransformed = !isTransformed; // Toggle transformation state
+
+        foreach (FlyingBall ball in allFlyingBalls.ToArray())
+        {
+            if (ball != null)
+            {
+                ball.ToggleFlyingObject();
+            }
+        }
+    }
+
+    private void ToggleFlyingObject()
+    {
+        GameObject newObjectPrefab = GetToggledPrefab();
+
+        if (newObjectPrefab == null)
+        {
+            Debug.LogError("Missing glowing or original prefab!");
+            return;
+        }
+
+        GameObject newObject = Instantiate(newObjectPrefab, transform.position, Quaternion.identity);
+        FlyingBall newFlyingBall = newObject.GetComponent<FlyingBall>();
+
+        if (newFlyingBall != null)
+        {
+            newFlyingBall.CopyFlyingBallData(this); // Copy movement and settings
+            newFlyingBall.RestartMovement(); // Ensures movement is reset properly
+        }
+        else
+        {
+            Debug.LogError("The instantiated object does not have a FlyingBall component!");
+        }
+
+        Destroy(gameObject); // Remove the old version
+    }
+
+    private GameObject GetToggledPrefab()
+    {
+        if (isTransformed)
+        {
+            // Transform to glowing version
+            if (gameObject.name.Contains("Flying_Fire")) return glowing_Fire;
+            if (gameObject.name.Contains("Flying_Leaf")) return glowing_Leaf;
+            if (gameObject.name.Contains("Flying_Lighting")) return glowing_Lighting;
+
+            if (gameObject.name.Contains("Fly_PowerFire")) return glowing_PowerFire;
+            if (gameObject.name.Contains("Fly_PowerLeaf")) return glowing_PowerLeaf;
+            if (gameObject.name.Contains("Fly_PowerLighting")) return glowing_PowerLighting;
+        }
+        else
+        {
+            // Transform back to original
+            if (gameObject.name.Contains("Glowing_Fire")) return flying_fire_Ball;
+            if (gameObject.name.Contains("Glowing_Leaf")) return flying_leaf_Ball;
+            if (gameObject.name.Contains("Glowing_Lighting")) return flying_lighting_Ball;
+
+            if (gameObject.name.Contains("Glowing_PowerFire")) return flying_power_Fire;
+            if (gameObject.name.Contains("Glowing_PowerLeaf")) return flying_power_Leaf;
+            if (gameObject.name.Contains("Glowing_PowerLighting")) return flying_power_Lighting;
+        }
+
+        return null; // No matching object found
+    }
+
+    private void CopyFlyingBallData(FlyingBall oldBall)
+    {
+        speed = oldBall.speed;
+        changeDirectionTime = oldBall.changeDirectionTime;
+        leftLimit = oldBall.leftLimit;
+        rightLimit = oldBall.rightLimit;
+        bottomLimit = oldBall.bottomLimit;
+        topLimit = oldBall.topLimit;
+        direction = oldBall.direction;
+        timer = oldBall.timer;
+        isGrabbed = oldBall.isGrabbed; 
+    }
+
+    private void RestartMovement()
+    {
+        Debug.Log("Restarting movement for " + gameObject.name);
+        direction = Random.insideUnitCircle.normalized; // Ensure a new movement direction
+
+        // Prevent falling due to gravity
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.gravityScale = 0; // Disable gravity
+            rb.velocity = Vector2.zero; // Reset any downward movement
+        }
+
+        transform.position = new Vector3(transform.position.x, Mathf.Max(transform.position.y, bottomLimit + 1f), transform.position.z); // Lift slightly above bottom limit
+        timer = 0;
     }
 
     void ChangeDirection()
@@ -77,44 +206,52 @@ public class FlyingBall : MonoBehaviour
 
         GameObject newBall = null;
 
-        if (gameObject.name == "Flying_Fire(Clone)")
+        if (gameObject.CompareTag("BadFlyingBall")) // Check if it's a bad ball
         {
-            newBall = Instantiate(fire_Ball, handPosition.position, Quaternion.identity);
+            handController.StartCoroutine(handController.UncontrollableHand());
         }
-        else if (gameObject.name == "Flying_Leaf(Clone)")
+        else
         {
-            newBall = Instantiate(leaf_Ball, handPosition.position, Quaternion.identity);
-        }
-        else if (gameObject.name == "Flying_Lighting(Clone)")
-        {
-            newBall = Instantiate(lighting_Ball, handPosition.position, Quaternion.identity);
-        }
-
-        else if(gameObject.name == "Fly_PowerFire(Clone)")
-        {
-            newBall = Instantiate(power_Fire, handPosition.position, Quaternion.identity);
-        }
-        else if (gameObject.name == "Fly_PowerLeaf(Clone)")
-        {
-            newBall = Instantiate(power_Leaf, handPosition.position, Quaternion.identity);
-        }
-        else if (gameObject.name == "Fly_PowerLighting(Clone)")
-        {
-            newBall = Instantiate(power_Lighting, handPosition.position, Quaternion.identity);
-        }
-
-        if (newBall != null)
-        {
-            newBall.transform.parent = handPosition; // Attach to hand so it moves with it
-
-            // Make sure the new ball is grabbed by the hand
-            Rigidbody2D newBallRb = newBall.GetComponent<Rigidbody2D>();
-            if (newBallRb != null)
+            if (gameObject.name == "Flying_Fire(Clone)")
             {
-                handController.GrabNewObject(newBallRb);
+                newBall = Instantiate(fire_Ball, handPosition.position, Quaternion.identity);
             }
-        }
+            else if (gameObject.name == "Flying_Leaf(Clone)")
+            {
+                newBall = Instantiate(leaf_Ball, handPosition.position, Quaternion.identity);
+            }
+            else if (gameObject.name == "Flying_Lighting(Clone)")
+            {
+                newBall = Instantiate(lighting_Ball, handPosition.position, Quaternion.identity);
+            }
 
+            else if (gameObject.name == "Fly_PowerFire(Clone)")
+            {
+                newBall = Instantiate(power_Fire, handPosition.position, Quaternion.identity);
+            }
+            else if (gameObject.name == "Fly_PowerLeaf(Clone)")
+            {
+                newBall = Instantiate(power_Leaf, handPosition.position, Quaternion.identity);
+            }
+            else if (gameObject.name == "Fly_PowerLighting(Clone)")
+            {
+                newBall = Instantiate(power_Lighting, handPosition.position, Quaternion.identity);
+            }
+
+            if (newBall != null)
+            {
+                newBall.transform.parent = handPosition; // Attach to hand so it moves with it
+
+                // Make sure the new ball is grabbed by the hand
+                Rigidbody2D newBallRb = newBall.GetComponent<Rigidbody2D>();
+                if (newBallRb != null)
+                {
+                    handController.GrabNewObject(newBallRb);
+                }
+            }
+
+        }
+        
         Destroy(gameObject); // Destroy the current ball
     }
 
@@ -163,5 +300,10 @@ public class FlyingBall : MonoBehaviour
         yield return new WaitForSeconds(5f);
         changeDirectionTime = 2f; // Reset to default
         Debug.Log("changeDirectionTime reset to default: " + changeDirectionTime);
+    }
+
+    private void OnDestroy()
+    {
+        allFlyingBalls.Remove(this); // Remove from list when destroyed
     }
 }
