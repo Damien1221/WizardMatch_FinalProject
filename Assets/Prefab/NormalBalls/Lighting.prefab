@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5601505644244430659}
   - component: {fileID: 5601505644244430657}
   - component: {fileID: 5601505644244430658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5601505644746480628}
   - component: {fileID: 5601505644746480635}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5601505645135352630}
   - component: {fileID: 5601505645135352629}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Inner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 5601505645491870959}
   - component: {fileID: 5601505645491870952}
   - component: {fileID: 5611472270958613954}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Lighting
   m_TagString: Ball
   m_Icon: {fileID: 0}
@@ -408,12 +408,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050683d621a0c5140bf0de78a8b627a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Effect: {fileID: 6207012029866049141, guid: 874e43511c42d9c479b04a3caa6943e1, type: 3}
+  Effect: {fileID: 4326588272840946251, guid: 1f42f4c4a0315d74d891212a19a5ce49, type: 3}
+  manaBarTransform: {fileID: 878528350324359115, guid: 395efa10ce1a9824a9c3225cc7079cf1, type: 3}
   EnemyEffect: {fileID: 0}
   clip: {fileID: 8300000, guid: f8aea6f9859f68c4f9d6987e41b7510a, type: 3}
+  camera_Shake: {fileID: 0}
+  ballCollider: {fileID: 5601505644244430658}
+  currentSpriteObject: {fileID: 0}
+  enemy_DamagedSprite: {fileID: 0}
   ballType: 3
   checkRadius: 0.6
-  isTriggerBall: 0
   isEnemyBall: 0
   enemyHealth: 3
   addedMana: 0.5
+  areaMin: {x: -9, y: -5}
+  areaMax: {x: -2.5, y: 5}

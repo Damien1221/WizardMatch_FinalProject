@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1266351138880532732}
   - component: {fileID: 6384125138450938339}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Inner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7692973582682120044}
   - component: {fileID: 2361378570642355247}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 8155872001846908151}
   - component: {fileID: 5057807965081249597}
   - component: {fileID: 4001233822818433159}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Leaf
   m_TagString: Ball
   m_Icon: {fileID: 0}
@@ -307,15 +307,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050683d621a0c5140bf0de78a8b627a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Effect: {fileID: 6207012029866049141, guid: 874e43511c42d9c479b04a3caa6943e1, type: 3}
+  Effect: {fileID: 4326588272840946251, guid: 1f42f4c4a0315d74d891212a19a5ce49, type: 3}
+  manaBarTransform: {fileID: 878528350324359115, guid: 395efa10ce1a9824a9c3225cc7079cf1, type: 3}
   EnemyEffect: {fileID: 0}
   clip: {fileID: 8300000, guid: f8aea6f9859f68c4f9d6987e41b7510a, type: 3}
+  camera_Shake: {fileID: 0}
+  ballCollider: {fileID: 868711076507218193}
+  currentSpriteObject: {fileID: 0}
+  enemy_DamagedSprite: {fileID: 0}
   ballType: 2
   checkRadius: 0.6
-  isTriggerBall: 0
   isEnemyBall: 0
   enemyHealth: 3
   addedMana: 0.5
+  areaMin: {x: -9, y: -5}
+  areaMax: {x: -2.5, y: 5}
 --- !u!1 &8554666080782475637
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +333,7 @@ GameObject:
   - component: {fileID: 1468858425161110922}
   - component: {fileID: 2676909895803769414}
   - component: {fileID: 868711076507218193}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}

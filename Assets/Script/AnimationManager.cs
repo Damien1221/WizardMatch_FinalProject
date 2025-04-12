@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class AnimationManager : MonoBehaviour
 {
@@ -9,6 +10,21 @@ public class AnimationManager : MonoBehaviour
     public Animator Ultimate_Effect;
     public Animator Hand;
     public Animator _monster_Attack;
+    public PlayableDirector _enemyEsacpe;
+
+    private LevelTransition _nextScene;
+
+    void Start()
+    {
+        _nextScene = FindObjectOfType<LevelTransition>();
+    }
+
+    public void TriggerScene()
+    {
+        _enemyEsacpe.Play();
+        _nextScene.ChasingScene();
+    }
+
     public void CameraShake()
     {
         camShake.SetTrigger("Camera_Shake");

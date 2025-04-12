@@ -25,7 +25,6 @@ public class DrawingSystem : MonoBehaviour
     private List<LineRenderer> gestureLinesRenderer = new List<LineRenderer>(); // Line renderers for drawing
     private LineRenderer currentGestureLineRenderer;
 
-    private List<EnemyBall> clickedEnemies = new List<EnemyBall>();
     private Vector3 virtualKeyPosition = Vector2.zero; // Stores mouse position
     private bool recognized = false;
     private bool canClickToDestroy = false;
@@ -41,14 +40,18 @@ public class DrawingSystem : MonoBehaviour
 
     void Update()
     {
-        if (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6)
+        if (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6 || _manabar.currentBlueMana >= 6)
         {
             HandleInput();
         }
 
         if (canClickToDestroy && Input.GetMouseButtonDown(0))
         {
-            DetectEnemyClick();
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hit.collider != null && hit.collider.CompareTag("EnemyBall"))
+            {
+                Destroy(hit.collider.gameObject); // Destroy enemy ball
+            }
         }
     }
 
@@ -160,7 +163,7 @@ public class DrawingSystem : MonoBehaviour
             }
 
             canClickToDestroy = true;
-            StartCoroutine(DestroyClickedEnemiesAfterTime(5f)); // Start countdown
+            StartCoroutine(DisableClickAfterTime(5f));
         }
         //else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
         //{
@@ -170,36 +173,11 @@ public class DrawingSystem : MonoBehaviour
 
         ResetGesture();
     }
-    void DetectEnemyClick()
-    {
-        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Collider2D hit = Physics2D.OverlapPoint(worldPoint);
 
-        if (hit != null)
-        {
-            EnemyBall enemy = hit.GetComponent<EnemyBall>();
-            if (enemy != null)
-            {
-                enemy.OnClick(); // Spawn the click effect
-                clickedEnemies.Add(enemy); // Track clicked enemies
-            }
-        }
-    }
-
-    private IEnumerator DestroyClickedEnemiesAfterTime(float time)
+    private IEnumerator DisableClickAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
-
-        foreach (EnemyBall enemy in clickedEnemies)
-        {
-            if (enemy != null)
-            {
-                enemy.DestroyEnemy(); // Destroy enemy and remove spawn effect
-            }
-        }
-
-        clickedEnemies.Clear(); // Reset the list
-        canClickToDestroy = false; // Disable clicking
+        canClickToDestroy = false; // Disable clicking after time expires
     }
 
     void ResetGesture()

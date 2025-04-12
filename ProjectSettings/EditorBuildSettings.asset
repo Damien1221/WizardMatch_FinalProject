@@ -6,6 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 4ee776f589a94b84c85899a416d2f673
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 7e889216d00708c48bd5819a097cbea1
+  - enabled: 1
+    path: Assets/Scenes/Map.unity
+    guid: 2ff0cad4871ce034ea2bef5df7463587
+  - enabled: 1
     path: Assets/Scenes/GamePlay.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/EnemyEscape.unity
+    guid: 884f26e117ead2b4d96a328fe234bfde
+  - enabled: 1
+    path: Assets/Scenes/EnemyRunning.unity
+    guid: a2588cdd836c7014c84b4c08c2e23f0c
   m_configObjects: {}

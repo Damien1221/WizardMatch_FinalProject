@@ -96,8 +96,8 @@ GameObject:
   - component: {fileID: 370175698104400835}
   - component: {fileID: 370175698104400832}
   - component: {fileID: 572439913829022897}
-  - component: {fileID: 4917506455389044406}
   - component: {fileID: 2283821941163993437}
+  - component: {fileID: 3781201057833510893}
   m_Layer: 0
   m_Name: Flying_Badguy
   m_TagString: BadFlyingBall
@@ -213,42 +213,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4917506455389044406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370175698104400846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c86576e274fbcb49a989b7544d27063, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fire_Ball: {fileID: 5093285177566311090, guid: d104ea57557049940a86c5bf4eae0a17, type: 3}
-  leaf_Ball: {fileID: 5784205448868124561, guid: 132d3c5add6d7ec44baf7592480c33c1, type: 3}
-  lighting_Ball: {fileID: 5601505645491870953, guid: a317bb360758ff44686a0126abcf391a, type: 3}
-  power_Fire: {fileID: 714723445531328291, guid: a4380c44b086f6b4497cff410bc00832, type: 3}
-  power_Leaf: {fileID: 1318094703181371554, guid: 13bcb2033f9d2ac4fb4e7d253247fcd8, type: 3}
-  power_Lighting: {fileID: 1722784994710406978, guid: 785478713ef61be48b296a723f526f06, type: 3}
-  glowing_Fire: {fileID: 7328152357431637824, guid: d0739a8fec2d54a4290d7b16ddaaec25, type: 3}
-  glowing_Leaf: {fileID: 8011995502076723218, guid: 0fe3950aba07a4f40a6e22f0e6fa6b08, type: 3}
-  glowing_Lighting: {fileID: 1980502184951426730, guid: e231b7ab3764037448e528c6ee00de4a, type: 3}
-  glowing_PowerFire: {fileID: 2303975599145128498, guid: e01e9c21b0dbe3247969afef91961cb9, type: 3}
-  glowing_PowerLeaf: {fileID: 5349430090336423502, guid: 9f8c12c7a5e415e4bb6873a57a4eb0b5, type: 3}
-  glowing_PowerLighting: {fileID: 887890452110690430, guid: 58d2c03b691307b4aa38005183b06137, type: 3}
-  flying_fire_Ball: {fileID: 370175698104400846}
-  flying_leaf_Ball: {fileID: 2315855765074269164, guid: ec4233a3665ccf242b7a3ba10499f6b2, type: 3}
-  flying_lighting_Ball: {fileID: 4388659120931330637, guid: 0ed00f4ede883d84e82ddbabf19b2330, type: 3}
-  flying_power_Fire: {fileID: 2810154098835694351, guid: 730a8567b690f48458eb2d3364b8e209, type: 3}
-  flying_power_Leaf: {fileID: 3386202122352959454, guid: 8d98b790062abde4187a135f039fe06a, type: 3}
-  flying_power_Lighting: {fileID: 9150546198445785556, guid: d62182424584df440b8205cddb20ed1c, type: 3}
-  speed: 3
-  changeDirectionTime: 0.5
-  leftLimit: -2
-  rightLimit: 6
-  bottomLimit: 1
-  topLimit: 3
 --- !u!114 &2283821941163993437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +227,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighLight: {fileID: 4867762240006746312, guid: 0a038543ce9941a44b98b09aab49ba09, type: 3}
   HighLight_Small: {fileID: 4397330873636045316, guid: 49e1872d800b87d4f952a0e1a1bdaf9e, type: 3}
+--- !u!114 &3781201057833510893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370175698104400846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b630d8e1326dc03429c3c758e1fbbbb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  waitTime: 2
+  moveTime: 3
+  leftLimit: -2
+  rightLimit: 6
+  bottomLimit: 1
+  topLimit: 3
 --- !u!1 &370175698377768637
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +425,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

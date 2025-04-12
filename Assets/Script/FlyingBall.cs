@@ -9,28 +9,15 @@ public class FlyingBall : MonoBehaviour
     public GameObject leaf_Ball;
     public GameObject lighting_Ball;
 
-    public GameObject power_Fire;
-    public GameObject power_Leaf;
-    public GameObject power_Lighting;
-
     // Glowing forms of flying objects
     public GameObject glowing_Fire;
     public GameObject glowing_Leaf;
     public GameObject glowing_Lighting;
 
-    public GameObject glowing_PowerFire;
-    public GameObject glowing_PowerLeaf;
-    public GameObject glowing_PowerLighting;
-
     //Flying object
     public GameObject flying_fire_Ball;
     public GameObject flying_leaf_Ball;
     public GameObject flying_lighting_Ball;
-
-    public GameObject flying_power_Fire;
-    public GameObject flying_power_Leaf;
-    public GameObject flying_power_Lighting;
-
 
     public float speed = 3f;
     public float changeDirectionTime = 2f;
@@ -143,10 +130,6 @@ public class FlyingBall : MonoBehaviour
             if (gameObject.name.Contains("Flying_Fire")) return glowing_Fire;
             if (gameObject.name.Contains("Flying_Leaf")) return glowing_Leaf;
             if (gameObject.name.Contains("Flying_Lighting")) return glowing_Lighting;
-
-            if (gameObject.name.Contains("Fly_PowerFire")) return glowing_PowerFire;
-            if (gameObject.name.Contains("Fly_PowerLeaf")) return glowing_PowerLeaf;
-            if (gameObject.name.Contains("Fly_PowerLighting")) return glowing_PowerLighting;
         }
         else
         {
@@ -154,10 +137,6 @@ public class FlyingBall : MonoBehaviour
             if (gameObject.name.Contains("Glowing_Fire")) return flying_fire_Ball;
             if (gameObject.name.Contains("Glowing_Leaf")) return flying_leaf_Ball;
             if (gameObject.name.Contains("Glowing_Lighting")) return flying_lighting_Ball;
-
-            if (gameObject.name.Contains("Glowing_PowerFire")) return flying_power_Fire;
-            if (gameObject.name.Contains("Glowing_PowerLeaf")) return flying_power_Leaf;
-            if (gameObject.name.Contains("Glowing_PowerLighting")) return flying_power_Lighting;
         }
 
         return null; // No matching object found
@@ -223,19 +202,6 @@ public class FlyingBall : MonoBehaviour
             else if (gameObject.name == "Flying_Lighting(Clone)")
             {
                 newBall = Instantiate(lighting_Ball, handPosition.position, Quaternion.identity);
-            }
-
-            else if (gameObject.name == "Fly_PowerFire(Clone)")
-            {
-                newBall = Instantiate(power_Fire, handPosition.position, Quaternion.identity);
-            }
-            else if (gameObject.name == "Fly_PowerLeaf(Clone)")
-            {
-                newBall = Instantiate(power_Leaf, handPosition.position, Quaternion.identity);
-            }
-            else if (gameObject.name == "Fly_PowerLighting(Clone)")
-            {
-                newBall = Instantiate(power_Lighting, handPosition.position, Quaternion.identity);
             }
 
             if (newBall != null)

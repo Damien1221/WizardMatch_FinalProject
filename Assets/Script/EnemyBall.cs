@@ -4,40 +4,23 @@ using UnityEngine;
 
 public class EnemyBall : MonoBehaviour
 {
-    public GameObject spawnEffectPrefab; // Effect when spell is first cast
-    public GameObject clickEffectPrefab; // Effect when clicked
+    public GameObject BlinkingEffect;
 
-    private GameObject activeClickEffect; // Track click effect
-    private GameObject activeSpawnEffect;
-    private bool isClicked = false;
+    void Start()
+    {
+        BlinkingEffect.SetActive(false);
+    }
+
     public void SpawnEffect()
     {
-        if (spawnEffectPrefab != null)
-        {
-            activeSpawnEffect = Instantiate(spawnEffectPrefab, transform.position, Quaternion.identity);
-        }
+        StartCoroutine(ActivateAndDeactivate());
     }
 
-    public void OnClick()
+    IEnumerator ActivateAndDeactivate()
     {
-        if (!isClicked && clickEffectPrefab != null)
-        {
-            activeClickEffect = Instantiate(clickEffectPrefab, transform.position, Quaternion.identity);
-            isClicked = true; // Mark as clicked so effect happens only once
-        }
-    }
-    public void DestroyEnemy()
-    {
-        if (activeSpawnEffect != null)
-        {
-            Destroy(activeSpawnEffect); // Remove spawn effect
-        }
-        if (activeClickEffect != null)
-        {
-            Destroy(activeClickEffect); // Remove click effect
-        }
-
-        Destroy(gameObject); // Destroy the enemy ball
+        BlinkingEffect.SetActive(true); // Activate the object
+        yield return new WaitForSeconds(5f); // Wait for 5 seconds
+        BlinkingEffect.SetActive(false); // Deactivate the object
     }
 
 }

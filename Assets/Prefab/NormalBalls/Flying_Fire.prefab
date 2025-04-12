@@ -184,7 +184,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.6
 --- !u!1 &6129705014435001722
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +291,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.6
 --- !u!50 &-2899330813858270715
 Rigidbody2D:
   serializedVersion: 4
@@ -346,8 +346,8 @@ MonoBehaviour:
   speed: 3
   changeDirectionTime: 0.5
   leftLimit: -2
-  rightLimit: 6
-  bottomLimit: 1
+  rightLimit: 7
+  bottomLimit: -2.2
   topLimit: 3
 --- !u!114 &5729692640479815657
 MonoBehaviour:

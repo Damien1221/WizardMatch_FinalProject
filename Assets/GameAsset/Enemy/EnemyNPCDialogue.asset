@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee088084e7681a4da6e83fa2a3d60ec, type: 3}
+  m_Name: EnemyNPCDialogue
+  m_EditorClassIdentifier: 
+  npcName: StarMonster
+  npcPorTrait: {fileID: -1281841758, guid: b0ba4f7b3e2772c4eaaf24bf448015d3, type: 3}
+  dialogueLines:
+  - Hello , Wizard
+  - Hey !
+  autoProgressLines: 0100
+  autoProgressDelay: 1.5
+  typingSpeed: 0.05
+  voiceSound: {fileID: 8300000, guid: 178e579a92198c04a8b403084e6b58f2, type: 3}
+  voicePitch: 1

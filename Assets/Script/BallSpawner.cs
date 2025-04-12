@@ -6,6 +6,7 @@ public class BallSpawner : MonoBehaviour
 {
     [SerializeField] GameObject[] ObjPrefab;
 
+    public GameObject _manaTarget;
     public float spawnInterval = 2f;
     public int maxBalls = 5;
 
@@ -17,6 +18,8 @@ public class BallSpawner : MonoBehaviour
     void Start()
     {
         StartCoroutine(SpawnBalls());
+
+        SpawnManaTarget();
     }
 
     // Update is called once per frame
@@ -44,4 +47,12 @@ public class BallSpawner : MonoBehaviour
         currentObj = Instantiate(ObjPrefab[Random.Range(0, ObjPrefab.Length)], randomSpawnPosition, Quaternion.identity);
         currentObj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
     }
+
+    public void SpawnManaTarget()
+    {
+        Vector3 Newposition = new Vector3(7.69f, -1.8f, 0);
+
+        Instantiate(_manaTarget, Newposition, Quaternion.identity);
+    }   
 }
+

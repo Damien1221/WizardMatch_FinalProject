@@ -6,7 +6,6 @@ public class HandController : MonoBehaviour
 {
     public Transform hand_Position;
     public Transform target;
-    public GameObject sparks_effect;
 
     public float topScreenLimit = 3.5f; // Adjust this based on your screen setup
     public float bottomScreenLimit = 2.0f; // Lower boundary for hand movement
@@ -19,6 +18,7 @@ public class HandController : MonoBehaviour
 
     public bool isHandUncontrollable = false; // Track uncontrollable state
 
+    private Ball _ball;
     private AnimationManager grab_Hand;
     private Rigidbody2D grabbedObject = null;
     private Vector3 mousePosition;
@@ -29,6 +29,7 @@ public class HandController : MonoBehaviour
     void Start()
     {
         grab_Hand = FindObjectOfType<AnimationManager>();
+        _ball = FindObjectOfType<Ball>();
     }
 
     void Update()
@@ -102,6 +103,7 @@ public class HandController : MonoBehaviour
 
             // Detach from hand
             grabbedObject.gravityScale = 1f;
+            grabbedObject.gameObject.GetComponent<Ball>().ballCollider.isTrigger = true;
             grabbedObject.transform.parent = null;
             grabbedObject = null;
         }

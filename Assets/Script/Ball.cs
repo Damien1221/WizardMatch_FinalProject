@@ -5,21 +5,27 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     public GameObject Effect;
+    public Transform manaBarTransform; // Drag this in from Inspector
+
     public GameObject EnemyEffect;
     public AudioClip clip;
     public AnimationManager camera_Shake;
+    public CircleCollider2D ballCollider;
 
     public GameObject currentSpriteObject;
     public Sprite enemy_DamagedSprite;
 
     public int ballType; // Type of ball (color)
     public float checkRadius = 0.6f; // Detection range for nearby balls
-    public bool isTriggerBall = false; // True if this is a trigger ball
 
     public bool isEnemyBall = false; // True if this is an enemy ball
     public int enemyHealth = 3; // Health for enemy balls
 
     public float addedMana = 0.5f;
+
+    // Define the area where the collider should turn back on
+    public Vector2 areaMin = new Vector2(-3f, 1f);  // Bottom-left corner
+    public Vector2 areaMax = new Vector2(3f, 5f);   // Top-right corner
 
     private SpriteRenderer spriteRenderer;
 
@@ -44,45 +50,19 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isTriggerBall) return; // Trigger balls don't form connections
-
         if (collision.gameObject.CompareTag("Ball") || collision.gameObject.CompareTag("Ground"))
         {
             List<Ball> connectedBalls = new List<Ball>();
             FindConnectedBalls(this, connectedBalls);
 
-            // Count only normal balls (ignore enemy balls)
             int normalBallCount = connectedBalls.FindAll(b => !b.isEnemyBall).Count;
 
-            if (normalBallCount < 3)
+            if (normalBallCount >= 3)
             {
-                connectedBalls.Clear(); // Reset list if not enough normal balls
-            }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Ball otherBall = other.GetComponent<Ball>();
-
-        if (isTriggerBall && otherBall != null && otherBall.ballType == this.ballType)
-        {
-            List<Ball> destroyGroup = new List<Ball>();
-            FindConnectedBalls(otherBall, destroyGroup);
-
-            int normalBallCount = destroyGroup.FindAll(b => !b.isEnemyBall).Count;
-            Debug.Log("Trigger Ball activated! Normal Ball Count: " + normalBallCount);
-
-            if (normalBallCount >= 4)
-            {
-                Debug.Log("Destroy Group contains:");
-                foreach (Ball ball in destroyGroup)
+                foreach (Ball ball in connectedBalls)
                 {
-                    Debug.Log(ball.name + " | Enemy: " + ball.isEnemyBall);
-
                     if (ball.isEnemyBall)
                     {
-                        Debug.Log(ball.name + " is an enemy and should take damage!");
                         ball.TakeDamage(1);
                     }
                     else
@@ -96,21 +76,45 @@ public class Ball : MonoBehaviour
                         {
                             ManaBar.instance.AddGreenMana(addedMana);
                         }
-                        else if(ball.name == "Lighting(Clone)")
+                        else if (ball.name == "Lighting(Clone)")
                         {
                             ManaBar.instance.AddBlueMana(addedMana);
                         }
 
+                        SpawnManaEffect(ball.transform.position);
                         Destroy(ball.gameObject);
                     }
                 }
-                Debug.Log(name + " (Trigger Ball) destroyed.");
-                ComboSystem.instance.IncreaseCombo();
-                Destroy(gameObject); // Destroy the trigger ball after activation
-                Instantiate(Effect, transform.position, Quaternion.identity);
+
+                //spawn ball
                 camera_Shake.CameraShake();
                 AudioSource.PlayClipAtPoint(clip, this.gameObject.transform.position);
+                ComboSystem.instance.IncreaseCombo();
             }
+        }
+    }
+
+    void SpawnManaEffect(Vector3 spawnPos)
+    {
+        // Add a small random offset
+        Vector3 offset = new Vector3(
+            Random.Range(-0.3f, 0.3f),
+            Random.Range(-0.3f, 0.3f),
+            0f
+        );
+
+        Vector3 finalPos = spawnPos + offset;
+
+        GameObject particle = Instantiate(Effect, spawnPos, Quaternion.identity);
+        ManaParticle mp = particle.GetComponent<ManaParticle>();
+        mp.target = manaBarTransform;
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (ballCollider.isTrigger && other.CompareTag("CupZone"))
+        {
+            ballCollider.isTrigger = false;
         }
     }
 
