@@ -15,6 +15,7 @@ public class KillZone : MonoBehaviour
     {
         _manabar = FindObjectOfType<ManaBar>();
         _uiController = FindObjectOfType<UIController>();
+        hasTutorialStarted = false;
     }
 
     // Update is called once per frame
@@ -28,6 +29,7 @@ public class KillZone : MonoBehaviour
 
         if (Input.GetKeyDown("q"))
         {
+            Debug.Log("Pressing Q");
             ManaBar.instance.AddMana(addedMana);
         }
         else if(Input.GetKeyDown("w"))
@@ -42,7 +44,10 @@ public class KillZone : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D col)
     {
-        Destroy(col.gameObject);
+        if(col.gameObject.CompareTag("Ball") || col.gameObject.CompareTag("EnemyBall"))
+        {
+            Destroy(gameObject);
+        }
 
     }
 }

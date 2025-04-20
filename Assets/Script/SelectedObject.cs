@@ -37,7 +37,8 @@ public class SelectedObject : MonoBehaviour
     {
         if (isMouseHeld) return; // Don't highlight if mouse is being held
 
-        if (gameObject.name == "Flying_Fire(Clone)" || gameObject.name == "Flying_Leaf(Clone)" || gameObject.name == "Flying_Lighting(Clone)" || gameObject.name == "Flying_Badguy(Clone)")
+        if (gameObject.name == "Flying_Fire(Clone)" || gameObject.name == "Flying_Leaf(Clone)" || gameObject.name == "Flying_Lighting(Clone)" 
+       || gameObject.name == "Flying_Badguy(Clone)" || gameObject.name == "Flying_AssistBall(Clone)")
         {
             if (newSelection == null)
             {

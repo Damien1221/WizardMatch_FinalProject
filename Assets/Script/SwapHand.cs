@@ -9,7 +9,8 @@ public class SwapHand : MonoBehaviour
 
     public GameObject hand1_Shadow;
 
-    private GameObject activeHand;  
+    private GameObject activeHand;
+    private bool canSwap = true; // Set to false to disable swapping
 
     // Start is called before the first frame update
     void Start()
@@ -24,10 +25,22 @@ public class SwapHand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (canSwap && Input.GetKeyDown(KeyCode.Space))
         {
             SwapHands();
         }
+    }
+
+    public void EnableSwapping()
+    {
+        canSwap = true;
+        FlyingBall.EnableToggle();
+    }
+
+    public void DisableSwapping()
+    {
+        canSwap = false;
+        FlyingBall.DisableToggle();
     }
 
     void SwapHands()

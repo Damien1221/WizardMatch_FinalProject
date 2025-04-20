@@ -16,6 +16,10 @@ public class UIController : MonoBehaviour
     public GameObject _PageOne;
     public GameObject _PageTwo;
 
+    public GameObject _losePanel;
+
+    public AudioSource _music;
+
     public float changeTime;
     public string sceneName;
 
@@ -47,7 +51,10 @@ public class UIController : MonoBehaviour
             return;
         if (_menuPanel == null)
             return;
+        if (_losePanel == null)
+            return;
 
+        _losePanel.SetActive(false);
         _tutorialPanel.SetActive(false);
         _pausePanel.SetActive(false);
         _menuPanel.SetActive(true);
@@ -61,17 +68,33 @@ public class UIController : MonoBehaviour
             TogglePause();
         }
 
-        if(introPlaying == true)
+        if (introPlaying)
         {
             changeTime -= Time.deltaTime;
 
             if (changeTime <= 0)
             {
-                SceneManager.LoadScene(sceneName);
+                introPlaying = false; // Prevent multiple triggers
+                StartCoroutine(FadeOutAudioAndChangeScene(0.1f)); // Duration in seconds
             }
-
         }
 
+    }
+
+    private IEnumerator FadeOutAudioAndChangeScene(float duration)
+    {
+        float startVolume = _music.volume;
+
+        float t = 0;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime; // Unscaled time so it works even if game is paused
+            _music.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        _music.volume = 0;
+        SceneManager.LoadScene(sceneName);
     }
 
     public void StartTutorial()
@@ -160,5 +183,11 @@ public class UIController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void LoseScreen()
+    {
+        Time.timeScale = 0; 
+        _losePanel.SetActive(true);
     }
 }

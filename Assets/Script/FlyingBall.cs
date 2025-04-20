@@ -37,6 +37,8 @@ public class FlyingBall : MonoBehaviour
     private float originalSpeed;
     private bool isSlowedDown = false;
 
+    private static bool canToggle = true;
+
     void Start()
     {
         ball_Spawner = FindObjectOfType<BallSpawner>();
@@ -85,6 +87,9 @@ public class FlyingBall : MonoBehaviour
 
     public static void ToggleAllFlyingObjects()
     {
+        if (!canToggle)
+            return; // If toggling is not allowed, do nothing
+
         isTransformed = !isTransformed; // Toggle transformation state
 
         foreach (FlyingBall ball in allFlyingBalls.ToArray())
@@ -94,6 +99,16 @@ public class FlyingBall : MonoBehaviour
                 ball.ToggleFlyingObject();
             }
         }
+    }
+
+    public static void EnableToggle()
+    {
+        canToggle = true;
+    }
+
+    public static void DisableToggle()
+    {
+        canToggle = false;
     }
 
     private void ToggleFlyingObject()

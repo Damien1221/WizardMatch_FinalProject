@@ -20,6 +20,7 @@ public class ManaBar : MonoBehaviour
     public float maxBlueMana = 20f;
 
     public float fillSpeed = 0.5f;
+    public float _delayTime = 2.1f;
 
     void Awake()
     {
@@ -47,12 +48,9 @@ public class ManaBar : MonoBehaviour
 
     public void AddMana(float amount)
     {
-        currentMana += amount;
-        currentMana = Mathf.Clamp(currentMana, 0, maxMana); // Prevent overflow
-        StartCoroutine(SmoothFill(currentMana)); // Start the smooth animation
-        Debug.Log("Mana Added: " + amount + " | Current Mana: " + currentMana);
+        StartCoroutine(DelayedAddMana(amount, _delayTime));
 
-        if(currentMana > 20)
+        if (currentMana > 20)
         {
             currentMana = 20;
         }
@@ -60,10 +58,7 @@ public class ManaBar : MonoBehaviour
 
     public void AddGreenMana(float amount)
     {
-        currentGreenMana += amount;
-        currentGreenMana = Mathf.Clamp(currentGreenMana, 0, maxGreenMana); // Prevent overflow
-        StartCoroutine(GreenSmoothFill(currentGreenMana)); // Start the smooth animation
-        Debug.Log("Green_Mana Added: " + amount + " | Current Green_Mana: " + currentGreenMana);
+        StartCoroutine(DelayedAddGreenMana(amount, _delayTime));
 
         if (currentGreenMana > 20)
         {
@@ -73,10 +68,7 @@ public class ManaBar : MonoBehaviour
 
     public void AddBlueMana(float amount)
     {
-        currentBlueMana += amount;
-        currentBlueMana = Mathf.Clamp(currentBlueMana, 0, maxBlueMana); // Prevent overflow
-        StartCoroutine(BlueSmoothFill(currentBlueMana)); // Start the smooth animation
-        Debug.Log("Blue_Mana Added: " + amount + " | Current Blue_Mana: " + currentBlueMana);
+        StartCoroutine(DelayedAddBlueMana(amount, _delayTime));
 
         if (currentBlueMana > 20)
         {
@@ -171,4 +163,30 @@ public class ManaBar : MonoBehaviour
         blue_ManaBar.value = targetValue;
     }
 
+    private IEnumerator DelayedAddMana(float amount, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        currentMana += amount;
+        currentMana = Mathf.Clamp(currentMana, 0, maxMana);
+        StartCoroutine(SmoothFill(currentMana));
+        Debug.Log("Mana Added After Delay: " + amount + " | Current Mana: " + currentMana);
+    }
+
+    private IEnumerator DelayedAddGreenMana(float amount, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        currentGreenMana += amount;
+        currentGreenMana = Mathf.Clamp(currentGreenMana, 0, maxGreenMana);
+        StartCoroutine(GreenSmoothFill(currentGreenMana));
+        Debug.Log("Green Mana Added After Delay: " + amount + " | Current Green Mana: " + currentGreenMana);
+    }
+
+    private IEnumerator DelayedAddBlueMana(float amount, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        currentBlueMana += amount;
+        currentBlueMana = Mathf.Clamp(currentBlueMana, 0, maxBlueMana);
+        StartCoroutine(BlueSmoothFill(currentBlueMana));
+        Debug.Log("Blue Mana Added After Delay: " + amount + " | Current Blue Mana: " + currentBlueMana);
+    }
 }

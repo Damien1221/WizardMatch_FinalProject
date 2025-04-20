@@ -7,8 +7,7 @@ public class Ball : MonoBehaviour
     public GameObject Effect;
     public Transform manaBarTransform; // Drag this in from Inspector
 
-    public GameObject EnemyEffect;
-    public AudioClip clip;
+    public GameObject EnemyEffect;  
     public AnimationManager camera_Shake;
     public CircleCollider2D ballCollider;
 
@@ -50,6 +49,9 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        float comboMultiplier = 1f + (ComboSystem.instance.GetComboCount() * 0.1f); // 10% more mana per combo
+        float scaledMana = addedMana * comboMultiplier;
+
         if (collision.gameObject.CompareTag("Ball") || collision.gameObject.CompareTag("Ground"))
         {
             List<Ball> connectedBalls = new List<Ball>();
@@ -70,25 +72,22 @@ public class Ball : MonoBehaviour
                         Debug.Log(ball.name + " is destroyed.");
                         if (ball.name == "Fire(Clone)")
                         {
-                            ManaBar.instance.AddMana(addedMana);
+                            ManaBar.instance.AddMana(scaledMana);
                         }
                         else if (ball.name == "Leaf(Clone)")
                         {
-                            ManaBar.instance.AddGreenMana(addedMana);
+                            ManaBar.instance.AddGreenMana(scaledMana);
                         }
                         else if (ball.name == "Lighting(Clone)")
                         {
-                            ManaBar.instance.AddBlueMana(addedMana);
+                            ManaBar.instance.AddBlueMana(scaledMana);
                         }
 
                         SpawnManaEffect(ball.transform.position);
                         Destroy(ball.gameObject);
                     }
                 }
-
-                //spawn ball
                 camera_Shake.CameraShake();
-                AudioSource.PlayClipAtPoint(clip, this.gameObject.transform.position);
                 ComboSystem.instance.IncreaseCombo();
             }
         }

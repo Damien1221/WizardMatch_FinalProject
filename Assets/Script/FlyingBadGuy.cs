@@ -15,6 +15,7 @@ public class FlyingBadGuy : MonoBehaviour
 
     private EnemySpawner _enemySpawner;
     private HandController _handController;
+    private AnimationManager _flyingAnimation;
     private Vector3 targetPosition;
     private bool isMoving = true;
 
@@ -22,12 +23,13 @@ public class FlyingBadGuy : MonoBehaviour
     {
         _handController = FindObjectOfType<HandController>();
         _enemySpawner = FindObjectOfType<EnemySpawner>();
+        _flyingAnimation = FindObjectOfType<AnimationManager>();
 
         StartCoroutine(MoveAndStopRoutine());
     }
 
     IEnumerator MoveAndStopRoutine()
-    {
+    { // need to put animation
         while (true)
         {
             // Move for some time
@@ -38,6 +40,7 @@ public class FlyingBadGuy : MonoBehaviour
 
             // Stop for a while
             isMoving = false;
+            _flyingAnimation.FlyingEnemyLaugh();
             yield return new WaitForSeconds(waitTime);
         }
     }

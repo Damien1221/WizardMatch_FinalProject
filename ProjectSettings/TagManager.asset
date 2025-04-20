@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - Intro
   - Target
+  - VFX
   layers:
   - Default
   - TransparentFX

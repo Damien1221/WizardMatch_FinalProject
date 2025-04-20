@@ -47,11 +47,13 @@ public class HandController : MonoBehaviour
         // Handle grabbing and releasing objects
         if (Input.GetMouseButtonDown(0))
         {
+            FindObjectOfType<SwapHand>().DisableSwapping();
             TryGrabObject();
             grab_Hand.ClosingHand();
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            FindObjectOfType<SwapHand>().EnableSwapping();
             ReleaseObject();
             grab_Hand.OpeningHand();
         }
@@ -103,7 +105,7 @@ public class HandController : MonoBehaviour
 
             // Detach from hand
             grabbedObject.gravityScale = 1f;
-            grabbedObject.gameObject.GetComponent<Ball>().ballCollider.isTrigger = true;
+            grabbedObject.gameObject.GetComponent<Ball>().ballCollider.isTrigger = true; //enemyball and assistball got bug 
             grabbedObject.transform.parent = null;
             grabbedObject = null;
         }

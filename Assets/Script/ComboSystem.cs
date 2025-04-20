@@ -8,6 +8,12 @@ public class ComboSystem : MonoBehaviour
 {
     public static ComboSystem instance; // Singleton for easy access
 
+    public AudioSource audioSource;
+    public AudioClip comboSound;
+    public float basePitch = 1f;
+    public float pitchStep = 0.1f; // How much pitch increases per combo
+    public float maxPitch = 2f;    // Cap pitch to avoid going too high
+
     public TMP_Text comboText;
     public float comboResetTime = 5f;
 
@@ -25,19 +31,33 @@ public class ComboSystem : MonoBehaviour
         UpdateComboUI();
     }
 
+    public int GetComboCount()
+    {
+        return comboCount;
+    }
+
     public void IncreaseCombo()
     {
         comboCount++;
         UpdateComboUI();
 
-        // Reset the previous reset timer
+        PlayComboSound();
+
         if (resetComboCoroutine != null)
         {
             StopCoroutine(resetComboCoroutine);
         }
 
-        // Start a new reset timer
         resetComboCoroutine = StartCoroutine(ResetComboAfterDelay());
+    }
+
+    private void PlayComboSound()
+    {
+        if (audioSource != null && comboSound != null)
+        {
+            audioSource.pitch = Mathf.Min(basePitch + comboCount * pitchStep, maxPitch);
+            audioSource.PlayOneShot(comboSound);
+        }
     }
 
     private IEnumerator ResetComboAfterDelay()
