@@ -14,6 +14,8 @@ public class WandController : MonoBehaviour
     public float rightLimit = 7f; // Right boundary
     public float moveSpeed = 10f;
 
+    public bool isHandUncontrollable = false;
+
     private Vector3 mousePosition;
     private Vector3 lastPosition;
     private Vector3 velocity;
@@ -32,7 +34,10 @@ public class WandController : MonoBehaviour
             target.position = transform.position;
         }
 
-        FollowMouse();
+        if (!isHandUncontrollable)
+        {
+            FollowMouse();
+        }
     }
 
     public void FollowMouse()
@@ -47,5 +52,10 @@ public class WandController : MonoBehaviour
         mousePosition.y = Mathf.Clamp(mousePosition.y, bottomScreenLimit, topScreenLimit); // Restrict vertical movement
         mousePosition.x = Mathf.Clamp(mousePosition.x, leftLimit, rightLimit); // Restrict left/right movement
         transform.position = Vector2.Lerp(transform.position, mousePosition, moveSpeed * Time.deltaTime);
+    }
+
+    public void StopAction()
+    {
+        isHandUncontrollable = true;
     }
 }

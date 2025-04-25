@@ -73,7 +73,7 @@ public class ComboSystem : MonoBehaviour
     {
         if (comboText != null)
         {
-            comboText.text = "Combo: " + "x" + comboCount;
+            comboText.text = $"<b><size=150%>{comboCount}</size></b>Chain!";
         }
         Debug.Log("Current Combo: " + comboCount);
     }

@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050683d621a0c5140bf0de78a8b627a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _comboText: {fileID: 7784960251246894930, guid: 55d25aeba9f0c8d409ff5046ad5b0fa2, type: 3}
   Effect: {fileID: 8181511073905170588, guid: 4d4161e6e2e129f489d3f61d29e90670, type: 3}
   manaBarTransform: {fileID: 1501709103277218910, guid: ced0804d04e1cf448b2bd365d2bc2042, type: 3}
   EnemyEffect: {fileID: 0}

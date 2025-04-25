@@ -39,7 +39,9 @@ public class DialogueManager : MonoBehaviour
 
         animator.Play("Dialogue_Start");
 
-        _playerMovement.FreezeMovement();
+        if (_playerMovement != null)
+            _playerMovement.FreezeMovement();
+
 
         lines.Clear();
 
@@ -84,10 +86,11 @@ public class DialogueManager : MonoBehaviour
         if (currentDialogueTrigger != null)
         {
             currentDialogueTrigger.EndDialogue();
-        }
+        }   
 
         isDialogueActive = false;
         animator.Play("Dialogue_Out");
-        _playerMovement.UnfreezeMovement();
+        if (_playerMovement != null)
+            _playerMovement.UnfreezeMovement();
     }
 }

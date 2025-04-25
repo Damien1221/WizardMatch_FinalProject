@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class EnemySpell : MonoBehaviour
 {
+    public GameObject _lowHealthImage;
     public GameObject _evilRing;
     public GameObject _closeEvilRing;
     public bool isEvilRingActive = false;
@@ -24,6 +25,8 @@ public class EnemySpell : MonoBehaviour
         _soundManager = FindObjectOfType<SoundManager>();
         weakPoint = FindObjectOfType<WeakPoint>();
         _playerHealth = FindObjectOfType<PlayerHealth>();
+
+        _lowHealthImage.SetActive(false);
     }
 
     // Update is called once per frame
@@ -83,6 +86,8 @@ public class EnemySpell : MonoBehaviour
         _soundManager.PlayBreakMagicRing();
         animator.Play("EnemyCircle_GetDestroy");
 
+        _lowHealthImage.SetActive(false);
+
         if (activeEvilRing != null)
         {
             Destroy(activeEvilRing);
@@ -92,6 +97,8 @@ public class EnemySpell : MonoBehaviour
 
     public void SpawnEvilRing() //GetDestroy
     {
+        _lowHealthImage.SetActive(true);
+
         StartCoroutine(CloseWeakPoint(5.5f));
         Vector3 newPosition = new Vector3(3.38f, -3.24f, 0);
         activeEvilRing = Instantiate(_evilRing, newPosition, Quaternion.identity); // Store the reference

@@ -5,6 +5,8 @@ using UnityEngine.Playables;
 
 public class AnimationManager : MonoBehaviour
 {
+    [SerializeField] private AudioClip _enemyLaugh;
+
     public GameObject _EnemyFace;
 
     public Animator camShake;
@@ -23,14 +25,17 @@ public class AnimationManager : MonoBehaviour
     public PlayableDirector _enemyEsacpe;
 
     private LevelTransition _nextScene;
+    private AudioSource _audioSource;
 
     void Start()
     {
+        if(_EnemyFace != null)
         _EnemyFace.SetActive(false);
 
         _nextScene = FindObjectOfType<LevelTransition>(); //  this will have bug later
+        _audioSource = GetComponent<AudioSource>();
 
-        if(_flyingEnemy == null)
+        if (_flyingEnemy == null)
         {
             //_flyingEnemy = .Find("Icon").gameObject;
         }
@@ -58,6 +63,10 @@ public class AnimationManager : MonoBehaviour
 
     public void EnemyFaceAttack()
     {
+        //play sound
+        _audioSource.clip = _enemyLaugh;
+        _audioSource.Play();
+
         _EnemyFace.SetActive(true);
         _enemyFace.Play("EnemyFace_Activate");
         StartCoroutine(ActiveTrigger());

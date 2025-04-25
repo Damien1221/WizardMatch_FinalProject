@@ -20,20 +20,35 @@ public class HandController : MonoBehaviour
 
     private Ball _ball;
     private AnimationManager grab_Hand;
+    private ManaBar _manabar;
+    private UIController _uiController;
+
     private Rigidbody2D grabbedObject = null;
     private Vector3 mousePosition;
 
     private Vector3 lastPosition;
     private Vector3 velocity;
 
+    private bool hasTutorialStarted = false;
+
     void Start()
     {
         grab_Hand = FindObjectOfType<AnimationManager>();
         _ball = FindObjectOfType<Ball>();
+        _manabar = FindObjectOfType<ManaBar>();
+        _uiController = FindObjectOfType<UIController>();
+
+        hasTutorialStarted = false;
     }
 
     void Update()
     {
+        if(!hasTutorialStarted && (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6 || _manabar.currentBlueMana >= 6))
+        {
+            _uiController.StartTutorial();
+            hasTutorialStarted = true;
+        }
+
         if (target != null)
         {
             target.position = transform.position;
@@ -117,6 +132,11 @@ public class HandController : MonoBehaviour
         grabbedObject.gravityScale = 0f;
         grabbedObject.velocity = Vector2.zero;
         grabbedObject.transform.parent = transform; // Attach to hand
+    }
+
+    public void StopAction()
+    {
+        isHandUncontrollable = true;
     }
 
     public IEnumerator UncontrollableHand()

@@ -41,7 +41,8 @@ public class DialogueTrigger : MonoBehaviour
     {
         DialogueManager.Instance.StartDialogue(dialogue, this);
 
-        IntroDialogue.SetActive(false);
+        if (IntroDialogue != null)
+            IntroDialogue.SetActive(false);
     }
 
     public void EndDialogue()
@@ -51,6 +52,8 @@ public class DialogueTrigger : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D col)
     {
+        Debug.Log("Detacted Player");
+
         if(col.tag == "Player")
         {
             Debug.Log("wizard Talking");

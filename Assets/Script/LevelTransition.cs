@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelTransition : MonoBehaviour
 {
+    public AudioSource _music;
+
     public string To_Scene;
     public float changeTime;
 
@@ -39,13 +41,71 @@ public class LevelTransition : MonoBehaviour
         }
     }
 
-    public void FightScene()
+    public void FinalFightScene()
     {
-        SceneManager.LoadScene("GamePlay");
+        StartCoroutine(FadeOutAudioAndChangeToFinalFight(0.1f));
+    }
+
+    public void TutorialScene()
+    {
+        StartCoroutine(FadeOutAudioAndChangeToTutorialScene(0.5f));
+    }
+
+    public void BackToForest()
+    {
+        StartCoroutine(FadeOutAudioAndChangeToForestScene(0.5f));
     }
 
     public void ChasingScene()
     {
         _isPlay = true;
+    }
+
+    private IEnumerator FadeOutAudioAndChangeToFinalFight(float duration)
+    {
+        float startVolume = _music.volume;
+
+        float t = 0;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime; // Unscaled time so it works even if game is paused
+            _music.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        _music.volume = 0;
+        LevelManager.Instance.LoadScene("GamePlay", "CrossFade");
+    }
+
+    private IEnumerator FadeOutAudioAndChangeToTutorialScene(float duration)
+    {
+        float startVolume = _music.volume;
+
+        float t = 0;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime; // Unscaled time so it works even if game is paused
+            _music.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        _music.volume = 0;
+        LevelManager.Instance.LoadScene("TutorialScene", "CrossFade");
+    }
+
+    private IEnumerator FadeOutAudioAndChangeToForestScene(float duration)
+    {
+        float startVolume = _music.volume;
+
+        float t = 0;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime; // Unscaled time so it works even if game is paused
+            _music.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        _music.volume = 0;
+        LevelManager.Instance.LoadScene("EnemyEscape", "CrossFade");
     }
 }

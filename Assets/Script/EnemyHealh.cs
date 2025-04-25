@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class EnemyHealh : MonoBehaviour
 {
+    public GameObject _hitParticle;
     public GameObject currentSpriteObject;
     public Sprite enemy_DamagedSprite;
+
+    public bool isTutorial = true;
 
     public float _enemyHealth = 2f;
     public float currentHealth;
 
     private AnimationManager _enemyAnim;
     private SpriteRenderer spriteRenderer;
+    private LevelTransition _levelTransition;
 
     // Start is called before the first frame update
     void Start()
     {
         _enemyAnim = FindObjectOfType<AnimationManager>();
+        _levelTransition = FindObjectOfType<LevelTransition>();
 
         currentHealth = _enemyHealth;
 
@@ -55,6 +60,7 @@ public class EnemyHealh : MonoBehaviour
     {
         yield return new WaitForSeconds(3.8f);
         _enemyAnim.MonsterGetHit();
+        Instantiate(_hitParticle, transform.position, Quaternion.identity);
 
         if (spriteRenderer != null && enemy_DamagedSprite != null)
         {
@@ -69,14 +75,33 @@ public class EnemyHealh : MonoBehaviour
 
     public void CheckEnemyHealth()
     {
-        if (currentHealth == 1)
+        if (isTutorial && currentHealth == 1)
         {
-            Debug.Log("Enemy Health is 1");
-            _enemyAnim.EnemyOneHeart();
+            StartCoroutine(DelayOneHeart());
+            //Next Scene
+            _levelTransition.BackToForest();
+        }
+        else if (currentHealth == 1)
+        {
+            StartCoroutine(DelayOneHeart());
         }
         else if (currentHealth == 0)
         {
-            _enemyAnim.EnemyDied();
+            StartCoroutine(DelayDied());
+            //Win Scene
+
         }
+    }
+
+    IEnumerator DelayOneHeart()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _enemyAnim.EnemyOneHeart();
+    }
+
+    IEnumerator DelayDied()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _enemyAnim.EnemyDied();
     }
 }

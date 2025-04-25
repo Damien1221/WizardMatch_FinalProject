@@ -6,6 +6,9 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] GameObject FlyingEnemyBall;
     public GameObject enemyBall;
+    public GameObject enemyball_effect;
+
+    public bool enableFlyingEnemies = true;
 
     public float SpawnInterval = 1f;
     public float EnemySpawnInterval = 2f; //flyingball
@@ -14,8 +17,11 @@ public class EnemySpawner : MonoBehaviour
     private bool isAttacking = true;
     private int enemyBallCount = 0;
     private float _spawnTimer = 0f;
+    private bool hasTriggeredEvilRing = false;
+
     private AnimationManager enemy_Attack; // spinning head
     private EnemySpell _enemySpell;
+    private ManaBar _manabar;
 
     protected GameObject currentObj;
 
@@ -24,8 +30,13 @@ public class EnemySpawner : MonoBehaviour
     {
         enemy_Attack = FindObjectOfType<AnimationManager>();
         _enemySpell = FindObjectOfType<EnemySpell>();
+        _manabar = FindObjectOfType<ManaBar>();
 
-        StartCoroutine(SpawnEnemyBalls());
+        if (enableFlyingEnemies)
+        {
+            StartCoroutine(SpawnEnemyBalls());
+        }
+
         _spawnTimer = SpawnInterval;
     }
 
@@ -50,7 +61,15 @@ public class EnemySpawner : MonoBehaviour
                     break;
 
                 case 1:
-                    if (_enemySpell != null)
+                    if (_enemySpell != null && !hasTriggeredEvilRing && _manabar.currentGreenMana >= 6f)
+                    {
+                        hasTriggeredEvilRing = true;
+
+                        _enemySpell.ActivateEvilRing();
+                        enemy_Attack.MonsterAttack();
+                        _spawnTimer = 20f;
+                    }
+                    else if (_enemySpell != null && hasTriggeredEvilRing)
                     {
                         _enemySpell.ActivateEvilRing();
                         enemy_Attack.MonsterAttack();
@@ -73,7 +92,15 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnAttack() //enemy dropping ball
     {
+        StartCoroutine(DelaySpawn());
+    }
+
+    IEnumerator DelaySpawn()
+    {
         Vector3 randomSpawnPosition = new Vector3(Random.Range(-7.2f, -4.0f), 3.2f, 0);
+        Instantiate(enemyball_effect, randomSpawnPosition, Quaternion.identity);
+
+        yield return new WaitForSeconds(1f);
         GameObject.Instantiate(enemyBall, randomSpawnPosition, Quaternion.identity);
     }
 

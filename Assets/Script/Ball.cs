@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    public GameObject _comboText;
     public GameObject Effect;
     public Transform manaBarTransform; // Drag this in from Inspector
 
@@ -89,6 +90,9 @@ public class Ball : MonoBehaviour
                 }
                 camera_Shake.CameraShake();
                 ComboSystem.instance.IncreaseCombo();
+                GameObject combo = Instantiate(_comboText, transform.position, Quaternion.identity);
+                Destroy(combo, 2f);
+
             }
         }
     }

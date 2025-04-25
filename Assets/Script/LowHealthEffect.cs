@@ -53,4 +53,5 @@ public class LowHealthEffect : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         warningImage.DOFade(0f, warningFadeOutDuration);
     }
+
 }

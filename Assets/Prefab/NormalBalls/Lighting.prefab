@@ -409,6 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050683d621a0c5140bf0de78a8b627a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _comboText: {fileID: 7784960251246894930, guid: 55d25aeba9f0c8d409ff5046ad5b0fa2, type: 3}
   Effect: {fileID: 4326588272840946251, guid: 1f42f4c4a0315d74d891212a19a5ce49, type: 3}
   manaBarTransform: {fileID: 878528350324359115, guid: 395efa10ce1a9824a9c3225cc7079cf1, type: 3}
   EnemyEffect: {fileID: 0}

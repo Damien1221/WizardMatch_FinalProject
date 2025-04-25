@@ -163,7 +163,7 @@ public class DrawingSystem : MonoBehaviour
             //Destroy Evil Ring
             if (_enemySpell != null && _enemySpell.isEvilRingActive)
             {
-                _enemySpell.RingGetDestroy();
+                StartCoroutine(RingDestroy());
             }
             if (_enemySpell != null && _enemySpell.isWeakPointActive)
             {
@@ -197,7 +197,7 @@ public class DrawingSystem : MonoBehaviour
             //Destroy Evil Ring
             if (_enemySpell != null && _enemySpell.isEvilRingActive)
             {
-                _enemySpell.RingGetDestroy();
+                StartCoroutine(RingDestroy());
             }
 
             //slow flying ball
@@ -234,6 +234,12 @@ public class DrawingSystem : MonoBehaviour
         //    _manabar.UsedGreenMana(usedmana);
         //}
         ResetGesture();
+    }
+
+    private IEnumerator RingDestroy()
+    {
+        yield return new WaitForSeconds(1f);
+        _enemySpell.RingGetDestroy();
     }
 
     private IEnumerator DrawingCooldown()

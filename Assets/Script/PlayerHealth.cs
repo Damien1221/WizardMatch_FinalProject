@@ -8,13 +8,14 @@ public class PlayerHealth : MonoBehaviour
     public float currentHealth;
 
     private AnimationManager _playerAnim;
-
+    private UIController _uiController;
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = _playerHealth;
 
         _playerAnim = FindObjectOfType<AnimationManager>();
+        _uiController = FindObjectOfType<UIController>();
     }
 
     // Update is called once per frame
@@ -34,11 +35,24 @@ public class PlayerHealth : MonoBehaviour
     {
         if(currentHealth == 1)
         {
-            _playerAnim.PlayerOneHeart();
+            StartCoroutine(DelayOneHeart());
         }
         else if(currentHealth == 0)
         {
-            _playerAnim.PlayerDied();
+            StartCoroutine(DelayDied());
         }
+    }
+
+    IEnumerator DelayOneHeart()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _playerAnim.PlayerOneHeart();
+    }
+
+    IEnumerator DelayDied()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _playerAnim.PlayerDied();
+        _uiController.LoseScreen();
     }
 }

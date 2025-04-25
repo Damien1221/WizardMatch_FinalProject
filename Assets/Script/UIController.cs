@@ -20,6 +20,8 @@ public class UIController : MonoBehaviour
 
     public AudioSource _music;
 
+    public Animator _title;
+
     public float changeTime;
     public string sceneName;
 
@@ -28,6 +30,11 @@ public class UIController : MonoBehaviour
 
     private PlayableDirector timeline;
     private AudioSource _audioSource;
+
+    private EnemySpawner _enemySpawner;
+    private HandController _handController;
+    private WandController _wandController;
+
     private bool isPaused = false;
     private bool introPlaying = false;
 
@@ -36,6 +43,10 @@ public class UIController : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
         timeline = GetComponent<PlayableDirector>();
+
+        _enemySpawner = FindObjectOfType<EnemySpawner>();
+        _handController = FindObjectOfType<HandController>();
+        _wandController = FindObjectOfType<WandController>();
 
         if (_pausePanel == null)
             return;
@@ -149,10 +160,18 @@ public class UIController : MonoBehaviour
 
     public void PlayIntro()
     {
+        _title.SetTrigger("Title_Close");
+
         introPlaying = true;
+        StartCoroutine(DelayPlayTimeline());
+
+    }
+
+    IEnumerator DelayPlayTimeline()
+    {
+        yield return new WaitForSeconds(0.5f);
         _menuPanel.SetActive(false);
         timeline.Play();
-
     }
 
     public void PauseGame()
@@ -187,7 +206,13 @@ public class UIController : MonoBehaviour
 
     public void LoseScreen()
     {
-        Time.timeScale = 0; 
         _losePanel.SetActive(true);
+        FindObjectOfType<SwapHand>().DisableSwapping();
+
+        _handController.StopAction();
+        _wandController.StopAction();
+
+        _enemySpawner.StopEnemyAttack();
     }
+    
 }
