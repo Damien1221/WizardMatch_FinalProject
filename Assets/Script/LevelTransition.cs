@@ -56,6 +56,11 @@ public class LevelTransition : MonoBehaviour
         StartCoroutine(FadeOutAudioAndChangeToForestScene(0.5f));
     }
 
+    public void TheEnd()
+    {
+        StartCoroutine(FadeOutAudioAndChangeToEndingScene(0.5f));
+    }
+
     public void ChasingScene()
     {
         _isPlay = true;
@@ -107,5 +112,21 @@ public class LevelTransition : MonoBehaviour
 
         _music.volume = 0;
         LevelManager.Instance.LoadScene("EnemyEscape", "CrossFade");
+    }
+
+    private IEnumerator FadeOutAudioAndChangeToEndingScene(float duration)
+    {
+        float startVolume = _music.volume;
+
+        float t = 0;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime; // Unscaled time so it works even if game is paused
+            _music.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        _music.volume = 0;
+        LevelManager.Instance.LoadScene("EndingScene", "CrossFade");
     }
 }

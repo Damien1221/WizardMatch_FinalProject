@@ -197,7 +197,6 @@ GameObject:
   - component: {fileID: 6454181926645209541}
   - component: {fileID: 6454181926645209540}
   - component: {fileID: 6454181926645209543}
-  - component: {fileID: 6454181926645209542}
   - component: {fileID: 783686763292797766}
   - component: {fileID: 8070340179826863717}
   m_Layer: 0
@@ -315,32 +314,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6454181926645209542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6454181926645209537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 050683d621a0c5140bf0de78a8b627a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Effect: {fileID: 4829472975167362968, guid: 39e6c005896c705418b6f531967bffba, type: 3}
-  manaBarTransform: {fileID: 0}
-  EnemyEffect: {fileID: 4829472975167362968, guid: 39e6c005896c705418b6f531967bffba, type: 3}
-  camera_Shake: {fileID: 0}
-  ballCollider: {fileID: 6454181926596244586}
-  currentSpriteObject: {fileID: 6454181927107191175}
-  enemy_DamagedSprite: {fileID: 21300000, guid: a5da00c49c262924e88496bb5f29662c, type: 3}
-  ballType: 1
-  checkRadius: 0.6
-  isEnemyBall: 1
-  enemyHealth: 2
-  addedMana: 0.5
-  areaMin: {x: -3, y: 1}
-  areaMax: {x: 3, y: 5}
 --- !u!114 &783686763292797766
 MonoBehaviour:
   m_ObjectHideFlags: 0

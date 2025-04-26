@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip _thunderSFX;
     [SerializeField] private AudioClip _shockingSFX;
     [SerializeField] private AudioClip _breakMagicRing;
+    [SerializeField] private AudioClip _enemyLaugh;
 
     private AudioSource _audioSource;
 
@@ -22,6 +23,12 @@ public class SoundManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void EnemyLaughing()
+    {
+        _audioSource.clip = _enemyLaugh;
+        _audioSource.Play();
     }
 
     public void CorrectSpellSFX()

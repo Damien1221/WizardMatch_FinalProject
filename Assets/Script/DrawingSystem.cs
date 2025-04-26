@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.IO;
 using PDollarGestureRecognizer;
@@ -13,6 +14,7 @@ public class DrawingSystem : MonoBehaviour
     public Collider2D drawingAreaCollider;
     public FlyingBall flying_Ball;
 
+    public Slider cooldownSlider;
     public GameObject _enemyBallVFX;
     public GameObject _closeRing;
 
@@ -66,6 +68,7 @@ public class DrawingSystem : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null && hit.collider.CompareTag("EnemyBall"))
             {
+                Debug.Log("Clicking Enemy");
                 //Instantiate(_enemyBallVFX, hit.transform.position, Quaternion.identity);
                 Destroy(hit.collider.gameObject); // Destroy enemy ball
             }
@@ -192,6 +195,7 @@ public class DrawingSystem : MonoBehaviour
 
         else if(gestureResult.Score > 0.4f && gestureResult.GestureClass == "Circle" && _manabar.currentGreenMana >= 6)
         {
+            FindObjectOfType<SwapHand>().DisableSwapping();
             _soundManager.CorrectSpellSFX();
             _manabar.UsedGreenMana(usedmana);
             //Destroy Evil Ring
@@ -207,6 +211,8 @@ public class DrawingSystem : MonoBehaviour
                 ball.SlowDownForDrawing();
                 ball.SetChangeDirectionTime(5f);
             }
+
+            StartCoroutine(DrawingNormalCooldown());
         }
         else if (gestureResult.Score > 0.4f && gestureResult.GestureClass == "five point star" && _manabar.currentBlueMana >= 6)
         {
@@ -228,11 +234,7 @@ public class DrawingSystem : MonoBehaviour
         {
             _soundManager.WrongSpellSFX();
         }
-        //else if (gestureResult.Score > 0.4f) // Minimum confidence threshold
-        //{
-        //    balloonSpawner.DestroyBalloonByShape(gestureResult.GestureClass); // Destroy balloon matching shape
-        //    _manabar.UsedGreenMana(usedmana);
-        //}
+       
         ResetGesture();
     }
 
@@ -246,8 +248,42 @@ public class DrawingSystem : MonoBehaviour
     {
         isOnCooldown = true;
         Debug.Log("Drawing is now on cooldown.");
-        yield return new WaitForSeconds(cooldownTime);
+
+        float elapsed = 0f;
+        float duration = cooldownTime; // 10 seconds for full cooldown
+        cooldownSlider.value = 1f; // Set slider full
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            cooldownSlider.value = Mathf.Lerp(1f, 0f, elapsed / duration); // Smoothly decrease
+            yield return null;
+        }
+
+        cooldownSlider.value = 0f;
         isOnCooldown = false;
+        Debug.Log("Drawing cooldown ended.");
+    }
+
+    private IEnumerator DrawingNormalCooldown()
+    {
+        isOnCooldown = true;
+        Debug.Log("Drawing is now on cooldown.");
+
+        float elapsed = 0f;
+        float duration = 2f; // 2 seconds for normal cooldown
+        cooldownSlider.value = 1f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            cooldownSlider.value = Mathf.Lerp(1f, 0f, elapsed / duration);
+            yield return null;
+        }
+
+        cooldownSlider.value = 0f;
+        isOnCooldown = false;
+        FindObjectOfType<SwapHand>().EnableSwapping();
         Debug.Log("Drawing cooldown ended.");
     }
 

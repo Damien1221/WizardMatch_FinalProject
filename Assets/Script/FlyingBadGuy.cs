@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FlyingBadGuy : MonoBehaviour
 {
+    public GameObject _destroyEffect;
+
     public float moveSpeed = 3f;
     public float waitTime = 2f; // Time to stop at a location
     public float moveTime = 3f; // Time to move before stopping
@@ -13,6 +15,7 @@ public class FlyingBadGuy : MonoBehaviour
     public float bottomLimit = 2f; // Movement boundary (bottom)
     public float topLimit = 6f; // Movement boundary (top)
 
+    private SoundManager _soundManager;
     private EnemySpawner _enemySpawner;
     private HandController _handController;
     private AnimationManager _flyingAnimation;
@@ -21,6 +24,7 @@ public class FlyingBadGuy : MonoBehaviour
 
     void Start()
     {
+        _soundManager = FindObjectOfType<SoundManager>();
         _handController = FindObjectOfType<HandController>();
         _enemySpawner = FindObjectOfType<EnemySpawner>();
         _flyingAnimation = FindObjectOfType<AnimationManager>();
@@ -61,6 +65,11 @@ public class FlyingBadGuy : MonoBehaviour
     {
         _handController.StartCoroutine(_handController.UncontrollableHand());
         Destroy(gameObject);
+
+        GameObject effect = Instantiate(_destroyEffect, transform.position, Quaternion.identity);
+        Destroy(effect, 2f);
+
+        _soundManager.EnemyLaughing();
         _enemySpawner.RemoveEnemyBall();
     }
 

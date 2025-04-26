@@ -33,7 +33,7 @@ public class KillZone : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.gameObject.CompareTag("Ball") || col.gameObject.CompareTag("EnemyBall"))
+        if(col.gameObject.CompareTag("Ball") || col.gameObject.CompareTag("EnemyBall")||col.gameObject.CompareTag("BadFlyingBall"))
         {
             Destroy(gameObject);
         }

@@ -17,6 +17,7 @@ public class HandController : MonoBehaviour
     public float throwForceMultiplier = 2f; // Adjust for stronger/weaker throws
 
     public bool isHandUncontrollable = false; // Track uncontrollable state
+    public bool isTutorial = false;
 
     private Ball _ball;
     private AnimationManager grab_Hand;
@@ -43,7 +44,7 @@ public class HandController : MonoBehaviour
 
     void Update()
     {
-        if(!hasTutorialStarted && (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6 || _manabar.currentBlueMana >= 6))
+        if (isTutorial && !hasTutorialStarted && (_manabar.currentMana >= 6 || _manabar.currentGreenMana >= 6 || _manabar.currentBlueMana >= 6)) 
         {
             _uiController.StartTutorial();
             hasTutorialStarted = true;
@@ -93,18 +94,21 @@ public class HandController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.zero);
         if (hit.collider != null && hit.collider.attachedRigidbody != null)
         {
-            grabbedObject = hit.collider.attachedRigidbody;
-
-            // Check if the grabbed object is a FlyingBall
-            FlyingBall flyingBall = grabbedObject.GetComponent<FlyingBall>();
-            if (flyingBall != null)
+            if (hit.collider.CompareTag("Ball"))
             {
-                flyingBall.GrabBall(hand_Position, this); // Pass hand reference
-            }
+                grabbedObject = hit.collider.attachedRigidbody;
 
-            grabbedObject.gravityScale = 0f;
-            grabbedObject.velocity = Vector2.zero;
-            grabbedObject.transform.parent = transform; // Attach to hand
+                // Check if the grabbed object is a FlyingBall
+                FlyingBall flyingBall = grabbedObject.GetComponent<FlyingBall>();
+                if (flyingBall != null)
+                {
+                    flyingBall.GrabBall(hand_Position, this); // Pass hand reference
+                }
+
+                grabbedObject.gravityScale = 0f;
+                grabbedObject.velocity = Vector2.zero;
+                grabbedObject.transform.parent = transform; // Attach to hand
+            }
         }
     }
 

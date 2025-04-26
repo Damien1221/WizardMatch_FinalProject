@@ -7,19 +7,14 @@ public class Ball : MonoBehaviour
     public GameObject _comboText;
     public GameObject Effect;
     public Transform manaBarTransform; // Drag this in from Inspector
-
-    public GameObject EnemyEffect;  
+  
     public AnimationManager camera_Shake;
     public CircleCollider2D ballCollider;
 
     public GameObject currentSpriteObject;
-    public Sprite enemy_DamagedSprite;
 
     public int ballType; // Type of ball (color)
     public float checkRadius = 0.6f; // Detection range for nearby balls
-
-    public bool isEnemyBall = false; // True if this is an enemy ball
-    public int enemyHealth = 3; // Health for enemy balls
 
     public float addedMana = 0.5f;
 
@@ -27,24 +22,8 @@ public class Ball : MonoBehaviour
     public Vector2 areaMin = new Vector2(-3f, 1f);  // Bottom-left corner
     public Vector2 areaMax = new Vector2(3f, 5f);   // Top-right corner
 
-    private SpriteRenderer spriteRenderer;
-
     void Start()
     {
-        if (currentSpriteObject == null)
-        {
-            currentSpriteObject = transform.Find("Icon").gameObject; // Replace "ChildSprite" with the actual name
-        }
-
-        if (currentSpriteObject != null)
-        {
-            spriteRenderer = currentSpriteObject.GetComponent<SpriteRenderer>(); // Get the SpriteRenderer
-        }
-        else
-        {
-            Debug.LogError("No sprite object found! Assign it in the Inspector or check the name.");
-        }
-
         camera_Shake = FindObjectOfType<AnimationManager>();
     }
 
@@ -58,41 +37,31 @@ public class Ball : MonoBehaviour
             List<Ball> connectedBalls = new List<Ball>();
             FindConnectedBalls(this, connectedBalls);
 
-            int normalBallCount = connectedBalls.FindAll(b => !b.isEnemyBall).Count;
-
-            if (normalBallCount >= 3)
+          if (connectedBalls.Count >= 3)
             {
                 foreach (Ball ball in connectedBalls)
                 {
-                    if (ball.isEnemyBall)
+                    Debug.Log(ball.name + " is destroyed.");
+                    if (ball.name == "Fire(Clone)")
                     {
-                        ball.TakeDamage(1);
+                        ManaBar.instance.AddMana(scaledMana);
                     }
-                    else
+                    else if (ball.name == "Leaf(Clone)")
                     {
-                        Debug.Log(ball.name + " is destroyed.");
-                        if (ball.name == "Fire(Clone)")
-                        {
-                            ManaBar.instance.AddMana(scaledMana);
-                        }
-                        else if (ball.name == "Leaf(Clone)")
-                        {
-                            ManaBar.instance.AddGreenMana(scaledMana);
-                        }
-                        else if (ball.name == "Lighting(Clone)")
-                        {
-                            ManaBar.instance.AddBlueMana(scaledMana);
-                        }
+                        ManaBar.instance.AddGreenMana(scaledMana);
+                    }
+                    else if (ball.name == "Lighting(Clone)")
+                    {
+                        ManaBar.instance.AddBlueMana(scaledMana);
+                    }
 
-                        SpawnManaEffect(ball.transform.position);
-                        Destroy(ball.gameObject);
-                    }
+                    SpawnManaEffect(ball.transform.position);
+                    Destroy(ball.gameObject);
                 }
                 camera_Shake.CameraShake();
                 ComboSystem.instance.IncreaseCombo();
                 GameObject combo = Instantiate(_comboText, transform.position, Quaternion.identity);
                 Destroy(combo, 2f);
-
             }
         }
     }
@@ -126,7 +95,6 @@ public class Ball : MonoBehaviour
         if (connectedBalls.Contains(ball)) return;
 
         connectedBalls.Add(ball);
-        Debug.Log(ball.name + " added to list. IsEnemy: " + ball.isEnemyBall);
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(ball.transform.position, checkRadius);
         foreach (Collider2D col in colliders)
@@ -136,43 +104,6 @@ public class Ball : MonoBehaviour
             {
                 FindConnectedBalls(nearbyBall, connectedBalls);
             }
-        }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        Debug.Log(name + " (Enemy) took damage! Current Health: " + enemyHealth);
-        enemyHealth -= damage;
-
-        if(enemyHealth == 1)
-        {
-            ChangeSprite();
-        }
-        else if (enemyHealth <= 0)
-        {
-            Debug.Log(name + " (Enemy) destroyed!");
-            Instantiate(EnemyEffect, transform.position, Quaternion.identity);
-            Destroy(gameObject);
-        }
-    }
-    void ChangeSprite()
-    {
-        if (spriteRenderer != null && enemy_DamagedSprite != null)
-        {
-            spriteRenderer.enabled = false; // Hide the current sprite
-            GameObject newSprite = new GameObject("DamagedSprite"); // Create a new GameObject
-            SpriteRenderer newRenderer = newSprite.AddComponent<SpriteRenderer>(); // Add SpriteRenderer
-
-            newRenderer.sprite = enemy_DamagedSprite; // Set new sprite
-            newRenderer.sortingOrder = 5;
-            newSprite.transform.position = currentSpriteObject.transform.position; // Match position
-            newSprite.transform.parent = transform; // Parent it to the enemy
-
-            Debug.Log("Enemy sprite changed!");
-        }
-        else
-        {
-            Debug.LogError("SpriteRenderer or damagedSprite is missing!");
         }
     }
 }

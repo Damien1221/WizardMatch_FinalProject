@@ -15,6 +15,8 @@ public class UIController : MonoBehaviour
     public GameObject _tutorialPanel;
     public GameObject _PageOne;
     public GameObject _PageTwo;
+    public GameObject _PageThree;
+    public GameObject _PageFour;
 
     public GameObject _losePanel;
 
@@ -55,6 +57,10 @@ public class UIController : MonoBehaviour
         if (_PageOne == null)
             return;
         if (_PageTwo == null)
+            return;
+        if (_PageThree == null)
+            return;
+        if (_PageFour == null)
             return;
         if (_mainMenu == null)
             return;
@@ -136,6 +142,38 @@ public class UIController : MonoBehaviour
     {
         _PageOne.SetActive(true);
         _PageTwo.SetActive(false);
+        _audioSource.clip = flipingPage_sfx;
+        _audioSource.Play();
+    }
+
+    public void NextPageThree()
+    {
+        _PageTwo.SetActive(false);
+        _PageThree.SetActive(true);
+        _audioSource.clip = flipingPage_sfx;
+        _audioSource.Play();
+    }
+
+    public void BackToPageTwo()
+    {
+        _PageTwo.SetActive(true);
+        _PageThree.SetActive(false);
+        _audioSource.clip = flipingPage_sfx;
+        _audioSource.Play();
+    }
+
+    public void NextToPageFour()
+    {
+        _PageThree.SetActive(false);
+        _PageFour.SetActive(true);
+        _audioSource.clip = flipingPage_sfx;
+        _audioSource.Play();
+    }
+
+    public void BackToPageThree()
+    {
+        _PageThree.SetActive(true);
+        _PageFour.SetActive(false);
         _audioSource.clip = flipingPage_sfx;
         _audioSource.Play();
     }

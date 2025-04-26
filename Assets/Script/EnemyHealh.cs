@@ -89,7 +89,8 @@ public class EnemyHealh : MonoBehaviour
         {
             StartCoroutine(DelayDied());
             //Win Scene
-
+            Debug.Log("EnemyDied");
+            _levelTransition.TheEnd();
         }
     }
 
